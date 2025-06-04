@@ -20,11 +20,3 @@ bin/rails test
 # Run system tests (needs a browser)
 bin/rails test:system
 ```
-
-## Linter
-
-To run rubocop use:
-
-```bash
-bin/rubocop -f github
-```
