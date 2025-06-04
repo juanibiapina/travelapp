@@ -1,0 +1,115 @@
+# Deploy Pull Requests to Fly.io staging environment
+name: Fly Staging Deploy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+jobs:
+  deploy:
+    name: Deploy PR to staging
+    runs-on: ubuntu-latest
+    # Only run deployment on open PRs, not on closed ones
+    if: github.event.action != 'closed'
+    concurrency:
+      group: staging-${{ github.event.number }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Fly.io CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to staging
+        run: |
+          # Create a staging app name with PR number
+          STAGING_APP="travelapp-pr-${{ github.event.number }}"
+          echo "Deploying to staging app: $STAGING_APP"
+
+          # Check if the staging app exists, create it if not
+          if ! flyctl apps list | grep -q "$STAGING_APP"; then
+            echo "Creating new staging app: $STAGING_APP"
+            flyctl apps create $STAGING_APP
+          fi
+
+          # Deploy with a custom app name
+          flyctl deploy --remote-only --app $STAGING_APP \
+            --build-arg RAILS_ENV=production
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Health check
+        run: |
+          STAGING_APP="travelapp-pr-${{ github.event.number }}"
+          STAGING_URL="https://${STAGING_APP}.fly.dev"
+
+          echo "Waiting for app to be ready..."
+          sleep 30
+
+          echo "Checking health endpoint: ${STAGING_URL}/up"
+
+          # Retry health check up to 10 times with 10 second intervals
+          for i in {1..10}; do
+            if curl -f -s -L "${STAGING_URL}/up" > /dev/null; then
+              echo "✅ Health check passed!"
+              echo "🚀 Staging app deployed successfully: ${STAGING_URL}"
+              echo "📋 View your changes at: ${STAGING_URL}"
+              exit 0
+            else
+              echo "Attempt $i failed, retrying in 10 seconds..."
+              sleep 10
+            fi
+          done
+
+          echo "❌ Health check failed after 10 attempts"
+          exit 1
+
+      - name: Comment on PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const stagingUrl = \
+              `https://travelapp-pr-${{ github.event.number }}.fly.dev`;
+            const comment = `🚀 **Staging deployment successful!**
+
+            Your changes are now available at: ${stagingUrl}
+
+            - Health check: ${stagingUrl}/up
+            - This staging environment will be automatically destroyed \
+            when this PR is closed.`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  cleanup:
+    name: Clean up staging app
+    runs-on: ubuntu-latest
+    # Only run cleanup when PR is closed
+    if: github.event.action == 'closed'
+
+    steps:
+      - name: Setup Fly.io CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Destroy staging app
+        run: |
+          STAGING_APP="travelapp-pr-${{ github.event.number }}"
+          echo "Destroying staging app: $STAGING_APP"
+
+          # Check if app exists before trying to destroy it
+          if flyctl apps list | grep -q "$STAGING_APP"; then
+            flyctl apps destroy $STAGING_APP --yes
+            echo "✅ Staging app $STAGING_APP destroyed"
+          else
+            echo "Staging app $STAGING_APP does not exist or was already \
+            destroyed"
+          fi
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
