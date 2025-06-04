@@ -21,7 +21,7 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)" 2>/dev/null || true
 
 # Get the required Ruby version from .ruby-version
-RUBY_VERSION=$(cat .ruby-version)
+RUBY_VERSION=$(cat .ruby-version | sed 's/^ruby-//')
 echo "🔧 Required Ruby version: $RUBY_VERSION"
 
 # Install Ruby if not available or wrong version

@@ -5,7 +5,7 @@ This directory contains configuration files for customizing the development envi
 ## Files
 
 - `setup.sh` - Setup script that automatically configures the development environment
-- `config.json` - Configuration file specifying the development environment requirements
+- `README.md` - This documentation file
 
 ## What the setup does
 
