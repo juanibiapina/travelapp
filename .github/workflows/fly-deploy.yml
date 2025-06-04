@@ -5,10 +5,14 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types: [labeled]
 jobs:
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
+    # Only deploy if it's a push to main or a PR with the "production" label
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'production'))
     concurrency: deploy-group    # optional: ensure only one action runs at a time
     steps:
       - uses: actions/checkout@v4
