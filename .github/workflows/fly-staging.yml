@@ -28,13 +28,7 @@ jobs:
           STAGING_APP="travelapp-pr-${{ github.event.number }}"
           echo "Deploying to staging app: $STAGING_APP"
 
-          # Check if the staging app exists, create it if not
-          if ! flyctl apps list | grep -q "$STAGING_APP"; then
-            echo "Creating new staging app: $STAGING_APP"
-            flyctl apps create $STAGING_APP
-          fi
-
-          # Deploy with a custom app name
+          # Deploy with a custom app name (this will create the app if it doesn't exist)
           flyctl deploy --remote-only --app $STAGING_APP \
             --build-arg RAILS_ENV=production
         env:
