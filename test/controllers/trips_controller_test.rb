@@ -64,7 +64,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   test "should only show trips belonging to current user in index" do
     # Create a trip for user two
     trip_for_user_two = users(:two).trips.create!(name: "User Two Trip")
-    
+
     get trips_url
     assert_response :success
     assert_select "h1", "Trips"
@@ -74,7 +74,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   test "should not allow access to trip belonging to another user" do
     other_user = users(:two)
     other_trip = other_user.trips.create!(name: "Other User Trip")
-    
+
     get trip_url(other_trip)
     assert_response :not_found
   end
@@ -82,7 +82,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   test "should not allow editing trip belonging to another user" do
     other_user = users(:two)
     other_trip = other_user.trips.create!(name: "Other User Trip")
-    
+
     get edit_trip_url(other_trip)
     assert_response :not_found
   end
@@ -90,7 +90,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   test "should not allow updating trip belonging to another user" do
     other_user = users(:two)
     other_trip = other_user.trips.create!(name: "Other User Trip")
-    
+
     patch trip_url(other_trip), params: { trip: { name: "Updated Name" } }
     assert_response :not_found
   end
@@ -98,7 +98,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   test "should not allow destroying trip belonging to another user" do
     other_user = users(:two)
     other_trip = other_user.trips.create!(name: "Other User Trip")
-    
+
     delete trip_url(other_trip)
     assert_response :not_found
   end
