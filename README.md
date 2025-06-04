@@ -1,32 +1,22 @@
-# README
+# Travel App
 
-## Setup Instructions
+A Rails application for organizing and managing travel plans.
 
-After cloning this Rails template, you should customize the project title:
+## Setup
 
-1. Open `app/views/layouts/application.html.erb`
-2. Change the title from `"TODO: Rails template"` to your desired project name
-3. This will update the browser tab title for your application
+1. Run setup script
+   ```bash
+   bin/setup --skip-server
+   ```
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Running Tests
 
-Things you may want to cover:
+To run the test suite locally:
 
-* Ruby version
+```bash
+# Run all unit and integration tests
+bin/rails test
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# Run system tests (needs a browser)
+bin/rails test:system
+```
