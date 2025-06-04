@@ -71,15 +71,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const stagingUrl = \
-              `https://travelapp-pr-${{ github.event.number }}.fly.dev`;
+            const stagingUrl = `https://travelapp-pr-${{ github.event.number }}.fly.dev`;
             const comment = `🚀 **Staging deployment successful!**
 
             Your changes are now available at: ${stagingUrl}
 
             - Health check: ${stagingUrl}/up
-            - This staging environment will be automatically destroyed \
-            when this PR is closed.`;
+            - This staging environment will be automatically destroyed when this PR is closed.`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -108,8 +106,7 @@ jobs:
             flyctl apps destroy $STAGING_APP --yes
             echo "✅ Staging app $STAGING_APP destroyed"
           else
-            echo "Staging app $STAGING_APP does not exist or was already \
-            destroyed"
+            echo "Staging app $STAGING_APP does not exist or was already destroyed"
           fi
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
