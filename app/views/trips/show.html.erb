@@ -2,6 +2,47 @@
   <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
     <%= render @trip %>
     
+    <!-- Links Section -->
+    <div class="mt-8 pt-6 border-t border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Links</h3>
+      
+      <!-- Add Link Form -->
+      <div class="mb-6">
+        <% new_link = @trip.links.build %>
+        <%= form_with(model: [@trip, new_link], local: true, class: "space-y-4") do |form| %>
+          <div class="flex gap-3">
+            <%= form.url_field :url, placeholder: "Paste a link here...", 
+                              class: "flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+            <%= form.submit "Add Link", class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Links List -->
+      <div id="links" class="space-y-3">
+        <% persisted_links = @trip.links.select(&:persisted?) %>
+        <% if persisted_links.any? %>
+          <% persisted_links.each do |link| %>
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+              <div class="flex-1">
+                <%= link_to link.url, link.url, target: "_blank", rel: "noopener", 
+                          class: "text-blue-600 hover:text-blue-800 underline break-all" %>
+              </div>
+              <div class="flex gap-2 ml-3">
+                <%= link_to "Edit", edit_trip_link_path(@trip, link), 
+                          class: "text-yellow-600 hover:text-yellow-800 text-sm font-medium" %>
+                <%= button_to "Delete", [@trip, link], method: :delete, 
+                            data: { confirm: "Are you sure?" },
+                            class: "text-red-600 hover:text-red-800 text-sm font-medium bg-transparent border-0 p-0" %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-gray-500 text-sm italic">No links added yet.</p>
+        <% end %>
+      </div>
+    </div>
+    
     <div class="mt-8 pt-6 border-t border-gray-200 flex flex-wrap gap-3">
       <%= link_to "Edit this trip", edit_trip_path(@trip), class: "bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>
       <%= link_to "Back to trips", trips_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>

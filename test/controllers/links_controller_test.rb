@@ -26,6 +26,16 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to trip_url(@trip)
   end
 
+  test "should not create link with invalid url" do
+    assert_no_difference("Link.count") do
+      post trip_links_url(@trip), params: { link: { url: "not-a-url" } }
+    end
+
+    assert_redirected_to trip_url(@trip)
+    follow_redirect!
+    assert_select ".bg-red-100", text: /must be a valid URL/
+  end
+
   test "should show link" do
     get trip_link_url(@trip, @link)
     assert_response :success

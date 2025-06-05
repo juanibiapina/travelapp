@@ -30,7 +30,7 @@ class LinksController < ApplicationController
         format.html { redirect_to @trip, notice: "Link was successfully created." }
         format.json { render :show, status: :created, location: [ @trip, @link ] }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { redirect_to @trip, alert: "Error: #{@link.errors.full_messages.join(', ')}" }
         format.json { render json: @link.errors, status: :unprocessable_entity }
       end
     end
