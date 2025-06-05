@@ -26,7 +26,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create trip" do
     assert_difference("Trip.count") do
-      post trips_url, params: { trip: { name: @trip.name } }
+      post trips_url, params: { trip: { name: @trip.name, start_date: @trip.start_date, end_date: @trip.end_date } }
     end
 
     assert_redirected_to trip_url(Trip.last)
@@ -43,7 +43,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update trip" do
-    patch trip_url(@trip), params: { trip: { name: @trip.name } }
+    patch trip_url(@trip), params: { trip: { name: @trip.name, start_date: @trip.start_date, end_date: @trip.end_date } }
     assert_redirected_to trip_url(@trip)
   end
 
@@ -63,7 +63,11 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should only show trips belonging to current user in index" do
     # Create a trip for user two
-    trip_for_user_two = users(:two).trips.create!(name: "User Two Trip")
+    trip_for_user_two = users(:two).trips.create!(
+      name: "User Two Trip",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 7.days
+    )
 
     get trips_url
     assert_response :success
@@ -73,7 +77,11 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow access to trip belonging to another user" do
     other_user = users(:two)
-    other_trip = other_user.trips.create!(name: "Other User Trip")
+    other_trip = other_user.trips.create!(
+      name: "Other User Trip",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 7.days
+    )
 
     get trip_url(other_trip)
     assert_response :not_found
@@ -81,7 +89,11 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow editing trip belonging to another user" do
     other_user = users(:two)
-    other_trip = other_user.trips.create!(name: "Other User Trip")
+    other_trip = other_user.trips.create!(
+      name: "Other User Trip",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 7.days
+    )
 
     get edit_trip_url(other_trip)
     assert_response :not_found
@@ -89,7 +101,11 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow updating trip belonging to another user" do
     other_user = users(:two)
-    other_trip = other_user.trips.create!(name: "Other User Trip")
+    other_trip = other_user.trips.create!(
+      name: "Other User Trip",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 7.days
+    )
 
     patch trip_url(other_trip), params: { trip: { name: "Updated Name" } }
     assert_response :not_found
@@ -97,7 +113,11 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow destroying trip belonging to another user" do
     other_user = users(:two)
-    other_trip = other_user.trips.create!(name: "Other User Trip")
+    other_trip = other_user.trips.create!(
+      name: "Other User Trip",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 7.days
+    )
 
     delete trip_url(other_trip)
     assert_response :not_found

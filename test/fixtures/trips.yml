@@ -3,7 +3,11 @@
 one:
   name: MyString
   user: one
+  start_date: <%= 30.days.from_now.to_date %>
+  end_date: <%= 37.days.from_now.to_date %>
 
 two:
   name: MyString
   user: two
+  start_date: <%= 60.days.from_now.to_date %>
+  end_date: <%= 67.days.from_now.to_date %>

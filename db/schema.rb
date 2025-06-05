@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_05_153041) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_05_230414) do
   create_table "links", force: :cascade do |t|
     t.string "url"
     t.integer "trip_id", null: false
@@ -24,6 +24,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_153041) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.date "start_date"
+    t.date "end_date"
     t.index ["user_id"], name: "index_trips_on_user_id"
   end
 
