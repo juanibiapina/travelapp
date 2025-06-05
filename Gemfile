@@ -23,6 +23,10 @@ gem "jbuilder"
 # Use Devise for authentication
 gem "devise"
 
+# OAuth2 authentication
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
+
 # Styling
 gem "tailwindcss-ruby", "~> 4.1"
 gem "tailwindcss-rails", "~> 4.2"
