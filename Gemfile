@@ -23,6 +23,9 @@ gem "jbuilder"
 # Use Devise for authentication
 gem "devise"
 
+# Use Pundit for authorization
+gem "pundit"
+
 # OAuth2 authentication
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"

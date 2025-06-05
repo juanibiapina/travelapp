@@ -5,25 +5,30 @@ class LinksController < ApplicationController
 
   # GET /trips/1/links or /trips/1/links.json
   def index
+    # Authorization is handled in set_trip
     @links = @trip.links
   end
 
   # GET /trips/1/links/1 or /trips/1/links/1.json
   def show
+    authorize @link
   end
 
   # GET /trips/1/links/new
   def new
     @link = @trip.links.build
+    authorize @link
   end
 
   # GET /trips/1/links/1/edit
   def edit
+    authorize @link
   end
 
   # POST /trips/1/links or /trips/1/links.json
   def create
     @link = @trip.links.build(link_params)
+    authorize @link
 
     respond_to do |format|
       if @link.save
@@ -38,6 +43,8 @@ class LinksController < ApplicationController
 
   # PATCH/PUT /trips/1/links/1 or /trips/1/links/1.json
   def update
+    authorize @link
+
     respond_to do |format|
       if @link.update(link_params)
         format.html { redirect_to [ @trip, @link ], notice: "Link was successfully updated." }
@@ -51,6 +58,7 @@ class LinksController < ApplicationController
 
   # DELETE /trips/1/links/1 or /trips/1/links/1.json
   def destroy
+    authorize @link
     @link.destroy!
 
     respond_to do |format|
@@ -62,7 +70,8 @@ class LinksController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_trip
-      @trip = current_user.trips.find(params.expect(:trip_id))
+      @trip = Trip.find(params.expect(:trip_id))
+      authorize @trip, :show?
     end
 
     def set_link
