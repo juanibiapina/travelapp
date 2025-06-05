@@ -23,6 +23,10 @@ gem "jbuilder"
 # Use Devise for authentication
 gem "devise"
 
+# Styling
+gem "tailwindcss-ruby", "~> 4.1"
+gem "tailwindcss-rails", "~> 4.2"
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"

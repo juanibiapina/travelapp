@@ -35,3 +35,7 @@
 
 # ignore bundler directory
 /vendor/bundle
+
+# Added by `bin/rails tailwindcss:install`
+/app/assets/builds/*
+!/app/assets/builds/.keep
