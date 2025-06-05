@@ -10,24 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      
+
       - name: Set staging app name
         run: echo "STAGING_APP_NAME=travelapp-pr-${{ github.event.number }}" >> $GITHUB_ENV
-      
+
       - name: Destroy staging app
         run: flyctl apps destroy ${{ env.STAGING_APP_NAME }} --yes
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         continue-on-error: true
-      
-      - name: Comment PR with cleanup confirmation
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🧹 Staging app **${{ env.STAGING_APP_NAME }}** has been destroyed.'
-            })
-        if: always()
