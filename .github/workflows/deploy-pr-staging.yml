@@ -23,9 +23,49 @@ jobs:
           if ! flyctl apps list | grep -q "${{ env.STAGING_APP_NAME }}"; then
             echo "Creating staging app: ${{ env.STAGING_APP_NAME }}"
             flyctl apps create ${{ env.STAGING_APP_NAME }}
+            echo "NEW_APP_CREATED=true" >> $GITHUB_ENV
           else
             echo "Staging app ${{ env.STAGING_APP_NAME }} already exists"
+            echo "NEW_APP_CREATED=false" >> $GITHUB_ENV
           fi
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      
+      - name: Set up secrets for new staging app
+        if: env.NEW_APP_CREATED == 'true'
+        run: |
+          echo "Setting up secrets for staging app: ${{ env.STAGING_APP_NAME }}"
+          
+          # Set common Rails secrets that are needed for the app to function
+          # These should be set in GitHub Secrets for staging deployments
+          if [ -n "${{ secrets.RAILS_MASTER_KEY }}" ]; then
+            flyctl secrets set RAILS_MASTER_KEY="${{ secrets.RAILS_MASTER_KEY }}" --app "${{ env.STAGING_APP_NAME }}"
+          fi
+          
+          if [ -n "${{ secrets.SECRET_KEY_BASE_STAGING }}" ]; then
+            flyctl secrets set SECRET_KEY_BASE="${{ secrets.SECRET_KEY_BASE_STAGING }}" --app "${{ env.STAGING_APP_NAME }}"
+          fi
+          
+          # Set AWS/Tigris storage secrets for file uploads
+          if [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then
+            flyctl secrets set AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" --app "${{ env.STAGING_APP_NAME }}"
+          fi
+          
+          if [ -n "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]; then
+            flyctl secrets set AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" --app "${{ env.STAGING_APP_NAME }}"
+          fi
+          
+          if [ -n "${{ secrets.AWS_ENDPOINT_URL_S3 }}" ]; then
+            flyctl secrets set AWS_ENDPOINT_URL_S3="${{ secrets.AWS_ENDPOINT_URL_S3 }}" --app "${{ env.STAGING_APP_NAME }}"
+          fi
+          
+          if [ -n "${{ secrets.BUCKET_NAME_STAGING }}" ]; then
+            flyctl secrets set BUCKET_NAME="${{ secrets.BUCKET_NAME_STAGING }}" --app "${{ env.STAGING_APP_NAME }}"
+          elif [ -n "${{ secrets.BUCKET_NAME }}" ]; then
+            flyctl secrets set BUCKET_NAME="${{ secrets.BUCKET_NAME }}" --app "${{ env.STAGING_APP_NAME }}"
+          fi
+          
+          echo "Secrets configuration completed"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       
