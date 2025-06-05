@@ -3,7 +3,7 @@ require "test_helper"
 class UserTest < ActiveSupport::TestCase
   def google_auth_hash(email: "test@example.com", uid: "123456789")
     OmniAuth::AuthHash.new({
-      provider: "google_oauth2",
+      provider: "google",
       uid: uid,
       info: {
         email: email
@@ -15,8 +15,8 @@ class UserTest < ActiveSupport::TestCase
     assert User.devise_modules.include?(:omniauthable)
   end
 
-  test "should have google_oauth2 as omniauth provider" do
-    assert_includes User.omniauth_providers, :google_oauth2
+  test "should have google as omniauth provider" do
+    assert_includes User.omniauth_providers, :google
   end
 
   test "should create user from omniauth" do
@@ -26,7 +26,7 @@ class UserTest < ActiveSupport::TestCase
       user = User.from_omniauth(auth)
       assert user.persisted?
       assert_equal "test@example.com", user.email
-      assert_equal "google_oauth2", user.provider
+      assert_equal "google", user.provider
       assert_equal "123456789", user.uid
       assert user.valid_password?(user.password) # Should have a generated password
     end
@@ -45,7 +45,7 @@ class UserTest < ActiveSupport::TestCase
       assert_equal existing_user.id, user.id
       assert_equal "existing@example.com", user.email
       # Should update provider and uid for existing user
-      assert_equal "google_oauth2", user.provider
+      assert_equal "google", user.provider
       assert_equal "123456789", user.uid
     end
   end
