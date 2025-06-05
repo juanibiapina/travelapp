@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  url: https://example.com
+  trip: one
+
+two:
+  url: https://google.com
+  trip: two
