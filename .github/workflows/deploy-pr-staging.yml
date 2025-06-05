@@ -9,6 +9,9 @@ jobs:
     name: Deploy PR to staging
     runs-on: ubuntu-latest
     environment: staging
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
