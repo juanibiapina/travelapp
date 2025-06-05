@@ -1,16 +1,19 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Trips" %>
 
-<h1>Trips</h1>
+<div class="max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Trips</h1>
+    <%= link_to "New trip", new_trip_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>
+  </div>
 
-<div id="trips">
-  <% @trips.each do |trip| %>
-    <%= render trip %>
-    <p>
-      <%= link_to "Show this trip", trip %>
-    </p>
-  <% end %>
+  <div id="trips" class="space-y-4">
+    <% @trips.each do |trip| %>
+      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <%= render trip %>
+        <div class="mt-4">
+          <%= link_to "Show this trip", trip, class: "text-blue-600 hover:text-blue-800 font-medium" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
-
-<%= link_to "New trip", new_trip_path %>

@@ -1,10 +1,13 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @trip %>
-
-<div>
-  <%= link_to "Edit this trip", edit_trip_path(@trip) %> |
-  <%= link_to "Back to trips", trips_path %>
-
-  <%= button_to "Destroy this trip", @trip, method: :delete %>
+<div class="max-w-2xl mx-auto">
+  <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
+    <%= render @trip %>
+    
+    <div class="mt-8 pt-6 border-t border-gray-200 flex flex-wrap gap-3">
+      <%= link_to "Edit this trip", edit_trip_path(@trip), class: "bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>
+      <%= link_to "Back to trips", trips_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>
+      <%= button_to "Destroy this trip", @trip, method: :delete, 
+                    data: { confirm: "Are you sure?" },
+                    class: "bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>
+    </div>
+  </div>
 </div>
