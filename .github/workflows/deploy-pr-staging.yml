@@ -24,7 +24,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy to staging
-        run: flyctl deploy --config fly.staging.toml --remote-only --app ${{ vars.FLYIO_APP_NAME || 'travelapp-staging' }}
+        run: flyctl deploy --config fly.staging.toml --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
@@ -33,12 +33,9 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const appName = process.env.FLYIO_APP_NAME || 'travelapp-staging';
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `🚀 Staging deployment complete!\n\n**Staging URL:** https://${appName}.fly.dev`
+              body: '🚀 Staging deployment complete!\n\n**Staging URL:** https://travelapp-staging.fly.dev'
             })
-        env:
-          FLYIO_APP_NAME: ${{ vars.FLYIO_APP_NAME || 'travelapp-staging' }}

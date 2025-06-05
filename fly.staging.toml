@@ -1,7 +1,6 @@
 # fly.toml app configuration file for staging deployments
 #
 # This file is used for staging deployments to a fixed staging app.
-# The app name should be set via the FLYIO_APP_NAME environment variable.
 #
 
 app = 'travelapp-staging'
