@@ -18,6 +18,17 @@ jobs:
       - name: Create staging fly.toml
         run: sed "s/APP_NAME/${{ env.STAGING_APP_NAME }}/g" fly.staging.toml > fly.staging.deployed.toml
       
+      - name: Check if staging app exists, create if needed
+        run: |
+          if ! flyctl apps list | grep -q "${{ env.STAGING_APP_NAME }}"; then
+            echo "Creating staging app: ${{ env.STAGING_APP_NAME }}"
+            flyctl apps create ${{ env.STAGING_APP_NAME }}
+          else
+            echo "Staging app ${{ env.STAGING_APP_NAME }} already exists"
+          fi
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      
       - name: Deploy to staging
         run: flyctl deploy --config fly.staging.deployed.toml --remote-only
         env:
