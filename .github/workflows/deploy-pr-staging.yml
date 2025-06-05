@@ -8,6 +8,7 @@ jobs:
   deploy:
     name: Deploy PR to staging
     runs-on: ubuntu-latest
+    environment: staging
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
@@ -38,12 +39,8 @@ jobs:
           
           # Set common Rails secrets that are needed for the app to function
           # These should be set in GitHub Secrets for staging deployments
-          if [ -n "${{ secrets.RAILS_MASTER_KEY }}" ]; then
-            flyctl secrets set RAILS_MASTER_KEY="${{ secrets.RAILS_MASTER_KEY }}" --app "${{ env.STAGING_APP_NAME }}"
-          fi
-          
-          if [ -n "${{ secrets.SECRET_KEY_BASE_STAGING }}" ]; then
-            flyctl secrets set SECRET_KEY_BASE="${{ secrets.SECRET_KEY_BASE_STAGING }}" --app "${{ env.STAGING_APP_NAME }}"
+          if [ -n "${{ secrets.SECRET_KEY_BASE }}" ]; then
+            flyctl secrets set SECRET_KEY_BASE="${{ secrets.SECRET_KEY_BASE }}" --app "${{ env.STAGING_APP_NAME }}"
           fi
           
           # Set AWS/Tigris storage secrets for file uploads
@@ -59,9 +56,7 @@ jobs:
             flyctl secrets set AWS_ENDPOINT_URL_S3="${{ secrets.AWS_ENDPOINT_URL_S3 }}" --app "${{ env.STAGING_APP_NAME }}"
           fi
           
-          if [ -n "${{ secrets.BUCKET_NAME_STAGING }}" ]; then
-            flyctl secrets set BUCKET_NAME="${{ secrets.BUCKET_NAME_STAGING }}" --app "${{ env.STAGING_APP_NAME }}"
-          elif [ -n "${{ secrets.BUCKET_NAME }}" ]; then
+          if [ -n "${{ secrets.BUCKET_NAME }}" ]; then
             flyctl secrets set BUCKET_NAME="${{ secrets.BUCKET_NAME }}" --app "${{ env.STAGING_APP_NAME }}"
           fi
           
