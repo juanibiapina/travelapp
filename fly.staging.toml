@@ -1,10 +1,9 @@
 # fly.toml app configuration file for staging deployments
 #
-# This file is used for PR staging deployments where APP_NAME will be replaced
-# with the actual staging app name (e.g., travelapp-pr-123)
+# This file is used for staging deployments to a fixed staging app.
 #
 
-app = 'APP_NAME'
+app = 'travelapp-staging'
 primary_region = 'fra'
 console_command = '/rails/bin/rails console'
 
