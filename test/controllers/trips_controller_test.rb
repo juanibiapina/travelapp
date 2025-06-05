@@ -6,6 +6,8 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @trip = trips(:one)
     @user = users(:one)
+    @other_user = users(:two)
+    @other_trip = trips(:two)
     sign_in @user
   end
 
@@ -62,13 +64,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should only show trips belonging to current user in index" do
-    # Create a trip for user two
-    trip_for_user_two = users(:two).trips.create!(
-      name: "User Two Trip",
-      start_date: Date.current + 1.day,
-      end_date: Date.current + 7.days
-    )
-
+    # The other user's trip (@other_trip) should not be visible
     get trips_url
     assert_response :success
     assert_select "h1", "Trips"
@@ -76,50 +72,22 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not allow access to trip belonging to another user" do
-    other_user = users(:two)
-    other_trip = other_user.trips.create!(
-      name: "Other User Trip",
-      start_date: Date.current + 1.day,
-      end_date: Date.current + 7.days
-    )
-
-    get trip_url(other_trip)
+    get trip_url(@other_trip)
     assert_response :not_found
   end
 
   test "should not allow editing trip belonging to another user" do
-    other_user = users(:two)
-    other_trip = other_user.trips.create!(
-      name: "Other User Trip",
-      start_date: Date.current + 1.day,
-      end_date: Date.current + 7.days
-    )
-
-    get edit_trip_url(other_trip)
+    get edit_trip_url(@other_trip)
     assert_response :not_found
   end
 
   test "should not allow updating trip belonging to another user" do
-    other_user = users(:two)
-    other_trip = other_user.trips.create!(
-      name: "Other User Trip",
-      start_date: Date.current + 1.day,
-      end_date: Date.current + 7.days
-    )
-
-    patch trip_url(other_trip), params: { trip: { name: "Updated Name" } }
+    patch trip_url(@other_trip), params: { trip: { name: "Updated Name" } }
     assert_response :not_found
   end
 
   test "should not allow destroying trip belonging to another user" do
-    other_user = users(:two)
-    other_trip = other_user.trips.create!(
-      name: "Other User Trip",
-      start_date: Date.current + 1.day,
-      end_date: Date.current + 7.days
-    )
-
-    delete trip_url(other_trip)
+    delete trip_url(@other_trip)
     assert_response :not_found
   end
 end
