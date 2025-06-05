@@ -1,0 +1,35 @@
+name: Deploy PR to Staging
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  deploy:
+    name: Deploy PR to staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      
+      - name: Set staging app name
+        run: echo "STAGING_APP_NAME=travelapp-pr-${{ github.event.number }}" >> $GITHUB_ENV
+      
+      - name: Create staging fly.toml
+        run: sed "s/APP_NAME/${{ env.STAGING_APP_NAME }}/g" fly.staging.toml > fly.staging.deployed.toml
+      
+      - name: Deploy to staging
+        run: flyctl deploy --config fly.staging.deployed.toml --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      
+      - name: Comment PR with staging URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀 Staging deployment complete!\n\n**Staging URL:** https://${{ env.STAGING_APP_NAME }}.fly.dev'
+            })
