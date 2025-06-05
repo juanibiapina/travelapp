@@ -12,13 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      
+
       - name: Set staging app name
         run: echo "STAGING_APP_NAME=travelapp-pr-${{ github.event.number }}" >> $GITHUB_ENV
-      
+
       - name: Create staging fly.toml
         run: sed "s/APP_NAME/${{ env.STAGING_APP_NAME }}/g" fly.staging.toml > fly.staging.deployed.toml
-      
+
       - name: Check if staging app exists, create if needed
         run: |
           if ! flyctl apps list | grep -q "${{ env.STAGING_APP_NAME }}"; then
@@ -31,44 +31,31 @@ jobs:
           fi
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      
+
       - name: Set up secrets for new staging app
         if: env.NEW_APP_CREATED == 'true'
         run: |
           echo "Setting up secrets for staging app: ${{ env.STAGING_APP_NAME }}"
-          
-          # Set common Rails secrets that are needed for the app to function
-          # These should be set in GitHub Secrets for staging deployments
-          if [ -n "${{ secrets.SECRET_KEY_BASE }}" ]; then
-            flyctl secrets set SECRET_KEY_BASE="${{ secrets.SECRET_KEY_BASE }}" --app "${{ env.STAGING_APP_NAME }}"
-          fi
-          
-          # Set AWS/Tigris storage secrets for file uploads
-          if [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then
-            flyctl secrets set AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" --app "${{ env.STAGING_APP_NAME }}"
-          fi
-          
-          if [ -n "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]; then
-            flyctl secrets set AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" --app "${{ env.STAGING_APP_NAME }}"
-          fi
-          
-          if [ -n "${{ secrets.AWS_ENDPOINT_URL_S3 }}" ]; then
-            flyctl secrets set AWS_ENDPOINT_URL_S3="${{ secrets.AWS_ENDPOINT_URL_S3 }}" --app "${{ env.STAGING_APP_NAME }}"
-          fi
-          
-          if [ -n "${{ secrets.BUCKET_NAME }}" ]; then
-            flyctl secrets set BUCKET_NAME="${{ secrets.BUCKET_NAME }}" --app "${{ env.STAGING_APP_NAME }}"
-          fi
-          
+
+          # Rails secrets
+          flyctl secrets set SECRET_KEY_BASE="${{ secrets.SECRET_KEY_BASE }}" --app "${{ env.STAGING_APP_NAME }}"
+
+          # AWS/Tigris storage secrets for file uploads
+          flyctl secrets set AWS_REGION="${{ secrets.AWS_REGION }}" --app "${{ env.STAGING_APP_NAME }}"
+          flyctl secrets set AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" --app "${{ env.STAGING_APP_NAME }}"
+          flyctl secrets set AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" --app "${{ env.STAGING_APP_NAME }}"
+          flyctl secrets set AWS_ENDPOINT_URL_S3="${{ secrets.AWS_ENDPOINT_URL_S3 }}" --app "${{ env.STAGING_APP_NAME }}"
+          flyctl secrets set BUCKET_NAME="${{ secrets.BUCKET_NAME }}" --app "${{ env.STAGING_APP_NAME }}"
+
           echo "Secrets configuration completed"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      
+
       - name: Deploy to staging
         run: flyctl deploy --config fly.staging.deployed.toml --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      
+
       - name: Comment PR with staging URL
         uses: actions/github-script@v7
         with:
