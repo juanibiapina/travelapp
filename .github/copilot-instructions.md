@@ -10,3 +10,4 @@ This is a Rails app.
 
 - Make sure tests pass
 - Make sure there are no linter offences
+- Make sure there are no security vulnerabilities (run brakeman)
