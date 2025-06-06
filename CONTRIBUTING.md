@@ -19,9 +19,11 @@ To run the test suite locally:
 # Run all unit and integration tests
 bin/rails test
 
-# Run system tests (needs a browser)
+# Run system tests (needs a browser) - Note: These timeout in GitHub Copilot environments
 bin/rails test:system
 ```
+
+**Note**: System tests require a browser and may not work in all environments (such as GitHub Copilot). If system tests timeout or fail to run, focus on the unit and integration tests which provide comprehensive coverage.
 
 ## Linter
 
@@ -147,6 +149,8 @@ Before committing changes:
 1. Ensure all tests pass (`bin/rails test`)
 2. Run the linter (`bin/rubocop -f github`)
 3. Run security scan (`bin/brakeman --no-pager`)
+
+**Note**: System tests (`bin/rails test:system`) are available but may timeout in GitHub Copilot environments. The unit and integration tests provide comprehensive coverage and should be sufficient for most development work.
 
 All development commands use the `bin/` prefix for consistency and to ensure the correct versions of tools are used.
 
