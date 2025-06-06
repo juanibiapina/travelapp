@@ -23,8 +23,8 @@ class User < ApplicationRecord
 
   # Get all trips the user has access to (owned + member of)
   def all_trips
-    Trip.joins("LEFT JOIN trip_memberships ON trips.id = trip_memberships.trip_id")
-        .where("trips.user_id = ? OR trip_memberships.user_id = ?", id, id)
+    Trip.joins(:trip_memberships)
+        .where(trip_memberships: { user_id: id })
         .distinct
   end
 end
