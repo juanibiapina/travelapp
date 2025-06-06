@@ -20,7 +20,7 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
 
     # Should show invite section
     assert_select "h3", text: "Invite Links"
-    assert_select "button", text: "Generate Invite Link"
+    assert_select "button", text: "Generate New Link"
     # Check for the exact text in the view when no invites exist
     assert_match(/No active invite links/, response.body)
   end
@@ -49,7 +49,7 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
 
     # Should not show invite section
     assert_select "h3", text: "Invite Links", count: 0
-    assert_select "button", text: "Generate Invite Link", count: 0
+    assert_select "button", text: "Generate New Link", count: 0
   end
 
   test "trip show page displays members section" do
@@ -57,7 +57,7 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     # Should show members section
-    assert_select "h3", text: "Members"
+    assert_select "h3", text: "Team Members"
 
     # Should display the owner (user one)
     assert_match(/user1@example\.com/, response.body)
