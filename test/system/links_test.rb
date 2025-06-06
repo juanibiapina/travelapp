@@ -21,7 +21,7 @@ class LinksTest < ApplicationSystemTestCase
     click_on "Create Link"
 
     assert_text "Link was successfully created"
-    click_on "Back to trip"
+    click_on "Back to Trips"
   end
 
   test "should update Link" do

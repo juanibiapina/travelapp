@@ -1,19 +1,110 @@
 <% content_for :title, "Trips" %>
 
-<div class="max-w-4xl mx-auto">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-gray-900">Trips</h1>
-    <%= link_to "New trip", new_trip_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>
-  </div>
-
-  <div id="trips" class="space-y-4">
-    <% @trips.each do |trip| %>
-      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <%= render trip %>
-        <div class="mt-4">
-          <%= link_to "Show this trip", trip, class: "text-blue-600 hover:text-blue-800 font-medium" %>
-        </div>
-      </div>
+<div class="max-w-6xl mx-auto">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-4xl font-bold text-gray-900">Your Trips</h1>
+      <p class="mt-2 text-lg text-gray-600">Organize and manage all your travel adventures</p>
+    </div>
+    <%= link_to new_trip_path, class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" do %>
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+      </svg>
+      New Trip
     <% end %>
   </div>
+
+  <% if @trips.any? %>
+    <div id="trips" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <% @trips.each do |trip| %>
+        <div class="group bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all duration-200 overflow-hidden">
+          <!-- Trip Header with Gradient -->
+          <div class="bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+            <div class="flex items-start justify-between">
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xl font-bold text-gray-900 truncate group-hover:text-blue-700 transition-colors duration-200">
+                  <%= trip.name %>
+                </h3>
+                <p class="mt-1 text-sm text-gray-600">
+                  Created <%= time_ago_in_words(trip.created_at) %> ago
+                </p>
+              </div>
+              <div class="flex-shrink-0 ml-4">
+                <div class="w-12 h-12 bg-white rounded-lg shadow-sm flex items-center justify-center group-hover:bg-blue-50 transition-colors duration-200">
+                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Trip Stats -->
+          <div class="p-6">
+            <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+              <div class="flex items-center">
+                <svg class="w-4 h-4 mr-1.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                </svg>
+                <span class="font-medium"><%= pluralize(trip.trip_memberships.count, 'member') %></span>
+              </div>
+              <div class="flex items-center">
+                <svg class="w-4 h-4 mr-1.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                </svg>
+                <span class="font-medium"><%= pluralize(trip.links.count, 'link') %></span>
+              </div>
+            </div>
+            
+            <!-- Owner Badge -->
+            <% owner = trip.owner %>
+            <% if owner %>
+              <div class="flex items-center mb-4">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-gray-900">
+                    <%= owner.email.split('@').first.titleize %>
+                  </p>
+                  <p class="text-xs text-gray-500">Trip Owner</p>
+                </div>
+              </div>
+            <% end %>
+            
+            <!-- Action Button -->
+            <%= link_to trip, class: "w-full inline-flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-blue-50 border border-gray-300 hover:border-blue-300 text-gray-700 hover:text-blue-700 font-medium rounded-lg transition-all duration-200 group-hover:bg-blue-50 group-hover:border-blue-300 group-hover:text-blue-700" do %>
+              <span>View Trip</span>
+              <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="text-center py-16">
+      <div class="mx-auto h-24 w-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+        <svg class="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
+        </svg>
+      </div>
+      <h3 class="text-xl font-semibold text-gray-900 mb-2">No trips yet</h3>
+      <p class="text-gray-600 mb-6 max-w-md mx-auto">
+        Start planning your next adventure! Create your first trip to organize travel links, collaborate with friends, and keep everything in one place.
+      </p>
+      <%= link_to new_trip_path, class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition duration-200" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        Create Your First Trip
+      <% end %>
+    </div>
+  <% end %>
 </div>

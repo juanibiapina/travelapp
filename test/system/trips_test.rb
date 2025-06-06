@@ -14,7 +14,7 @@ class TripsTest < ApplicationSystemTestCase
 
   test "should create trip" do
     visit trips_url
-    click_on "New trip"
+    click_on "New Trip"
 
     fill_in "Name", with: @trip.name
     click_on "Create Trip"
@@ -25,7 +25,7 @@ class TripsTest < ApplicationSystemTestCase
 
   test "should update Trip" do
     visit trip_url(@trip)
-    click_on "Edit this trip", match: :first
+    click_on "Edit Trip", match: :first
 
     fill_in "Name", with: @trip.name
     click_on "Update Trip"
@@ -36,7 +36,7 @@ class TripsTest < ApplicationSystemTestCase
 
   test "should destroy Trip" do
     visit trip_url(@trip)
-    click_on "Destroy this trip", match: :first
+    click_on "Delete Trip", match: :first
 
     assert_text "Trip was successfully destroyed"
   end

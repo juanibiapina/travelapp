@@ -67,7 +67,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
     get trips_url
     assert_response :success
-    assert_select "h1", "Trips"
+    assert_select "h1", "Your Trips"
     # The trip from user two should not be visible
   end
 
