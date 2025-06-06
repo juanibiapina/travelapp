@@ -51,4 +51,20 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
     assert_select "h3", text: "Invite Links", count: 0
     assert_select "button", text: "Generate Invite Link", count: 0
   end
+
+  test "trip show page displays members section" do
+    get trip_path(@trip)
+    assert_response :success
+
+    # Should show members section
+    assert_select "h3", text: "Members"
+
+    # Should display the owner (user one)
+    assert_match(/user1@example\.com/, response.body)
+    assert_match(/Owner/, response.body)
+
+    # Should display the member (user three from fixtures)
+    assert_match(/user3@example\.com/, response.body)
+    assert_match(/Member/, response.body)
+  end
 end
