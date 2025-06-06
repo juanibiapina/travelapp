@@ -63,8 +63,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should only show trips belonging to current user in index" do
     # Create a trip for user two
-    trip_for_user_two = Trip.create!(name: "User Two Trip")
-    TripMembership.create!(trip: trip_for_user_two, user: users(:two), role: "owner")
+    trip_for_user_two = create_trip_with_owner("User Two Trip", users(:two))
 
     get trips_url
     assert_response :success
@@ -74,8 +73,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow access to trip belonging to another user" do
     other_user = users(:two)
-    other_trip = Trip.create!(name: "Other User Trip")
-    TripMembership.create!(trip: other_trip, user: other_user, role: "owner")
+    other_trip = create_trip_with_owner("Other User Trip", other_user)
 
     get trip_url(other_trip)
     assert_response :not_found
@@ -83,8 +81,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow editing trip belonging to another user" do
     other_user = users(:two)
-    other_trip = Trip.create!(name: "Other User Trip")
-    TripMembership.create!(trip: other_trip, user: other_user, role: "owner")
+    other_trip = create_trip_with_owner("Other User Trip", other_user)
 
     get edit_trip_url(other_trip)
     assert_response :not_found
@@ -92,8 +89,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow updating trip belonging to another user" do
     other_user = users(:two)
-    other_trip = Trip.create!(name: "Other User Trip")
-    TripMembership.create!(trip: other_trip, user: other_user, role: "owner")
+    other_trip = create_trip_with_owner("Other User Trip", other_user)
 
     patch trip_url(other_trip), params: { trip: { name: "Updated Name" } }
     assert_response :not_found
@@ -101,10 +97,17 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow destroying trip belonging to another user" do
     other_user = users(:two)
-    other_trip = Trip.create!(name: "Other User Trip")
-    TripMembership.create!(trip: other_trip, user: other_user, role: "owner")
+    other_trip = create_trip_with_owner("Other User Trip", other_user)
 
     delete trip_url(other_trip)
     assert_response :not_found
+  end
+
+  private
+
+  def create_trip_with_owner(name, user)
+    trip = Trip.create!(name: name)
+    TripMembership.create!(trip: trip, user: user, role: "owner")
+    trip
   end
 end
