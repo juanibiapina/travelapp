@@ -2,6 +2,8 @@
 
 Thank you for your interest in contributing to the Travel App! This document provides all the information you need to get started with development.
 
+**Important**: Please keep this document up to date as the project evolves. Changes to development processes, new dependencies, or architectural updates should be reflected here.
+
 ## Development Setup
 
 1. Run setup script
@@ -109,7 +111,7 @@ The Travel App has a simple but effective data model:
 
 ### Development Workflow
 
-Before making any changes:
+Before committing changes:
 1. Ensure all tests pass (`bin/rails test`)
 2. Run the linter (`bin/rubocop -f github`)
 3. Run security scan (`bin/brakeman --no-pager`)
