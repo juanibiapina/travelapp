@@ -6,26 +6,26 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  # Handle pending invites after login
-  before_action :handle_pending_invite, if: :user_signed_in?
-
   private
 
   def user_not_authorized
     head :not_found
   end
 
-  def handle_pending_invite
-    return unless session[:pending_invite_token]
+  def after_sign_in_path_for(resource)
+    if session[:pending_invite_token]
+      token = session.delete(:pending_invite_token)
+      invite = Invite.find_by(token: token)
 
-    token = session.delete(:pending_invite_token)
-    invite = Invite.find_by(token: token)
-
-    if invite && invite.invite_valid? && !invite.trip.member?(current_user)
-      if invite.trip.add_member(current_user)
-        redirect_to invite.trip, notice: "Successfully joined the trip!"
-        nil
+      if invite && invite.invite_valid? && !invite.trip.member?(resource)
+        if invite.trip.add_member(resource)
+          flash[:notice] = "Successfully joined the trip!"
+          return trip_path(invite.trip)
+        end
       end
     end
+
+    # Default behavior
+    super
   end
 end
