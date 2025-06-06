@@ -14,7 +14,7 @@ class TripsController < ApplicationController
 
   # GET /trips/new
   def new
-    @trip = Trip.new(user: current_user)
+    @trip = Trip.new
     authorize @trip
   end
 
@@ -25,7 +25,7 @@ class TripsController < ApplicationController
 
   # POST /trips or /trips.json
   def create
-    @trip = current_user.trips.build(trip_params)
+    @trip = Trip.new(trip_params)
     authorize @trip
 
     respond_to do |format|

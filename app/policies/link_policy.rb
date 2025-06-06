@@ -2,11 +2,11 @@
 
 class LinkPolicy < ApplicationPolicy
   def index?
-    user.present? && trip_owned_by_user?
+    user.present? && trip_accessible_by_user?
   end
 
   def show?
-    user.present? && trip_owned_by_user?
+    user.present? && trip_accessible_by_user?
   end
 
   def create?
@@ -23,14 +23,20 @@ class LinkPolicy < ApplicationPolicy
 
   private
 
+  def trip_accessible_by_user?
+    record.trip.member?(user)
+  end
+
   def trip_owned_by_user?
-    record.trip.user == user
+    record.trip.owner?(user)
   end
 
   class Scope < Scope
     def resolve
       if user.present?
-        scope.joins(:trip).where(trips: { user: user })
+        scope.joins(trip: :trip_memberships)
+             .where(trip_memberships: { user_id: user.id })
+             .distinct
       else
         scope.none
       end

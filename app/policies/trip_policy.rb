@@ -6,7 +6,7 @@ class TripPolicy < ApplicationPolicy
   end
 
   def show?
-    user.present? && (record.user == user || record.member?(user))
+    user.present? && record.member?(user)
   end
 
   def create?
@@ -24,9 +24,9 @@ class TripPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if user.present?
-        # Return trips the user owns or is a member of
-        scope.joins("LEFT JOIN trip_memberships ON trips.id = trip_memberships.trip_id")
-             .where("trips.user_id = ? OR trip_memberships.user_id = ?", user.id, user.id)
+        # Return trips the user is a member of
+        scope.joins(:trip_memberships)
+             .where(trip_memberships: { user_id: user.id })
              .distinct
       else
         scope.none
