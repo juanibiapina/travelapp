@@ -17,6 +17,9 @@ jobs:
     # You can define any steps you want, and they will run before the agent starts.
     # If you do not check out your code, Copilot will do this for you.
     steps:
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git pkg-config google-chrome-stable libnss3 libatk-bridge2.0-0t64 libdrm2 libxkbcommon0 libxss1 libasound2t64 libatspi2.0-0t64 libgtk-3-0t64
+
       - name: Checkout code
         uses: actions/checkout@v4
 
