@@ -1,14 +1,14 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
-  def google_auth_hash(email: "test@example.com", uid: "123456789", name: "Test User", picture: "https://example.com/picture.jpg")
+  def google_auth_hash(email: "test@example.com", uid: "123456789", name: "Test User", image: "https://example.com/picture.jpg")
     OmniAuth::AuthHash.new({
       provider: "google",
       uid: uid,
       info: {
         email: email,
         name: name,
-        picture: picture
+        image: image
       }
     })
   end
@@ -42,7 +42,7 @@ class UserTest < ActiveSupport::TestCase
       password: "password123"
     )
 
-    auth = google_auth_hash(email: "existing@example.com", name: "Existing User", picture: "https://example.com/existing.jpg")
+    auth = google_auth_hash(email: "existing@example.com", name: "Existing User", image: "https://example.com/existing.jpg")
 
     assert_no_difference "User.count" do
       user = User.from_omniauth(auth)
@@ -58,11 +58,11 @@ class UserTest < ActiveSupport::TestCase
 
   test "should handle multiple oauth providers for same email" do
     # Create user with Google OAuth first
-    auth1 = google_auth_hash(email: "multi@example.com", uid: "111", name: "Multi User", picture: "https://example.com/multi1.jpg")
+    auth1 = google_auth_hash(email: "multi@example.com", uid: "111", name: "Multi User", image: "https://example.com/multi1.jpg")
     user1 = User.from_omniauth(auth1)
 
     # Try to create/find user with same email but different uid
-    auth2 = google_auth_hash(email: "multi@example.com", uid: "222", name: "Multi User Updated", picture: "https://example.com/multi2.jpg")
+    auth2 = google_auth_hash(email: "multi@example.com", uid: "222", name: "Multi User Updated", image: "https://example.com/multi2.jpg")
 
     assert_no_difference "User.count" do
       user2 = User.from_omniauth(auth2)
@@ -81,7 +81,7 @@ class UserTest < ActiveSupport::TestCase
       uid: "no_name",
       info: {
         email: "no_name@example.com",
-        picture: "https://example.com/picture.jpg"
+        image: "https://example.com/picture.jpg"
       }
     })
 
