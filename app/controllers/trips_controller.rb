@@ -4,25 +4,29 @@ class TripsController < ApplicationController
 
   # GET /trips or /trips.json
   def index
-    @trips = current_user.trips
+    @trips = policy_scope(Trip)
   end
 
   # GET /trips/1 or /trips/1.json
   def show
+    authorize @trip
   end
 
   # GET /trips/new
   def new
-    @trip = current_user.trips.build
+    @trip = Trip.new(user: current_user)
+    authorize @trip
   end
 
   # GET /trips/1/edit
   def edit
+    authorize @trip
   end
 
   # POST /trips or /trips.json
   def create
     @trip = current_user.trips.build(trip_params)
+    authorize @trip
 
     respond_to do |format|
       if @trip.save
@@ -37,6 +41,8 @@ class TripsController < ApplicationController
 
   # PATCH/PUT /trips/1 or /trips/1.json
   def update
+    authorize @trip
+
     respond_to do |format|
       if @trip.update(trip_params)
         format.html { redirect_to @trip, notice: "Trip was successfully updated." }
@@ -50,6 +56,7 @@ class TripsController < ApplicationController
 
   # DELETE /trips/1 or /trips/1.json
   def destroy
+    authorize @trip
     @trip.destroy!
 
     respond_to do |format|
@@ -61,7 +68,7 @@ class TripsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_trip
-      @trip = current_user.trips.find(params.expect(:id))
+      @trip = Trip.find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.
