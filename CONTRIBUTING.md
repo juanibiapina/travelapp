@@ -19,7 +19,7 @@ To run the test suite locally:
 # Run all unit and integration tests
 bin/rails test
 
-# Run system tests (needs a browser)
+# Run system tests (works properly in all environments including Copilot)
 bin/rails test:system
 ```
 
@@ -144,9 +144,11 @@ The Travel App has a simple but effective data model:
 ### Development Workflow
 
 Before committing changes:
-1. Ensure all tests pass (`bin/rails test`)
+1. Ensure all tests pass (`bin/rails test` and optionally `bin/rails test:system`)
 2. Run the linter (`bin/rubocop -f github`)
 3. Run security scan (`bin/brakeman --no-pager`)
+
+System tests are now fully supported in development environments including Copilot workspaces and run efficiently with headless Chrome.
 
 All development commands use the `bin/` prefix for consistency and to ensure the correct versions of tools are used.
 

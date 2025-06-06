@@ -3,7 +3,7 @@ This is a Rails app.
 ## General
 
 - Use `bin/rails` to run Rails commands
-- Don't run `bin/rails test:system` because it timeouts on the Copilot Environment
+- System tests (`bin/rails test:system`) now work correctly in the Copilot Environment
 - Check CONTRIBUTING.md for development commands and application overview
 
 ## Before any commit
