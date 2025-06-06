@@ -2,6 +2,28 @@
   <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
     <%= render @trip %>
     
+    <!-- Members Section -->
+    <div class="mt-8 pt-6 border-t border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Members</h3>
+      
+      <div class="space-y-3">
+        <% @trip.trip_memberships.includes(:user).each do |membership| %>
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+            <div class="flex-1">
+              <div class="text-sm font-medium text-gray-900">
+                <%= membership.user.email %>
+              </div>
+            </div>
+            <div class="ml-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= membership.role == 'owner' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' %>">
+                <%= membership.role.titleize %>
+              </span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
     <% if policy(@trip).update? %>
       <!-- Invite Links Section -->
       <div class="mt-8 pt-6 border-t border-gray-200">

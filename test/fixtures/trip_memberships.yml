@@ -9,3 +9,8 @@ two:
   trip: two
   user: two
   role: owner
+
+three:
+  trip: one
+  user: three
+  role: member
