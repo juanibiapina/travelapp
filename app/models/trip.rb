@@ -4,6 +4,10 @@ class Trip < ApplicationRecord
   has_many :members, through: :trip_memberships, source: :user
   has_many :invites, dependent: :destroy
 
+  validates :start_date, presence: true
+  validates :end_date, presence: true
+  validate :end_date_after_start_date
+
   # Get the owner of the trip
   def owner
     trip_memberships.find_by(role: "owner")&.user
@@ -25,5 +29,15 @@ class Trip < ApplicationRecord
   def add_member(user, role: "member")
     return false if member?(user)
     trip_memberships.create(user: user, role: role)
+  end
+
+  private
+
+  def end_date_after_start_date
+    return unless start_date && end_date
+
+    if end_date < start_date
+      errors.add(:end_date, "must be after the start date")
+    end
   end
 end

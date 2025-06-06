@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_06_090554) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_104803) do
   create_table "invites", force: :cascade do |t|
     t.integer "trip_id", null: false
     t.string "token", null: false
@@ -47,6 +47,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_090554) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
   end
 
   create_table "users", force: :cascade do |t|

@@ -26,7 +26,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create trip" do
     assert_difference("Trip.count") do
-      post trips_url, params: { trip: { name: @trip.name } }
+      post trips_url, params: { trip: { name: @trip.name, start_date: Date.current, end_date: Date.current + 7.days } }
     end
 
     assert_redirected_to trip_url(Trip.last)
@@ -43,7 +43,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update trip" do
-    patch trip_url(@trip), params: { trip: { name: @trip.name } }
+    patch trip_url(@trip), params: { trip: { name: @trip.name, start_date: @trip.start_date, end_date: @trip.end_date } }
     assert_redirected_to trip_url(@trip)
   end
 
@@ -106,7 +106,7 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   private
 
   def create_trip_with_owner(name, user)
-    trip = Trip.create!(name: name)
+    trip = Trip.create!(name: name, start_date: Date.current, end_date: Date.current + 7.days)
     TripMembership.create!(trip: trip, user: user, role: "owner")
     trip
   end

@@ -75,6 +75,6 @@ class TripsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def trip_params
-      params.expect(trip: [ :name ])
+      params.expect(trip: [ :name, :start_date, :end_date ])
     end
 end
