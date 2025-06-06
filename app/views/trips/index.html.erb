@@ -25,6 +25,19 @@
                 <h3 class="text-xl font-bold text-gray-900 truncate group-hover:text-blue-700 transition-colors duration-200">
                   <%= trip.name %>
                 </h3>
+                <div class="mt-2 flex items-center text-sm text-blue-700 bg-blue-100 rounded-md px-2 py-1 w-fit">
+                  <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                  <span class="font-medium">
+                    <%= trip.start_date.strftime("%b %d") %>
+                    <% unless trip.start_date == trip.end_date %>
+                      — <%= trip.end_date.strftime("%b %d, %Y") %>
+                    <% else %>
+                      , <%= trip.start_date.strftime("%Y") %>
+                    <% end %>
+                  </span>
+                </div>
                 <p class="mt-1 text-sm text-gray-600">
                   Created <%= time_ago_in_words(trip.created_at) %> ago
                 </p>
