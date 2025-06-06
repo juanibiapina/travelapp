@@ -28,3 +28,11 @@ To run rubocop use:
 ```bash
 bin/rubocop -f github
 ```
+
+## Security Scan
+
+To run brakeman for security vulnerability scanning:
+
+```bash
+bin/brakeman --no-pager
+```
