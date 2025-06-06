@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_06_011626) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_012937) do
   create_table "invites", force: :cascade do |t|
     t.integer "trip_id", null: false
     t.string "token", null: false
@@ -47,8 +47,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_011626) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
-    t.index ["user_id"], name: "index_trips_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -71,5 +69,4 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_011626) do
   add_foreign_key "links", "trips"
   add_foreign_key "trip_memberships", "trips"
   add_foreign_key "trip_memberships", "users"
-  add_foreign_key "trips", "users"
 end

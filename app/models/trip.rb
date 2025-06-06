@@ -1,5 +1,4 @@
 class Trip < ApplicationRecord
-  belongs_to :user, optional: true # Keep for backward compatibility - this is the original owner
   has_many :links, dependent: :destroy
   has_many :trip_memberships, dependent: :destroy
   has_many :members, through: :trip_memberships, source: :user
