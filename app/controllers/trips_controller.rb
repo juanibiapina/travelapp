@@ -30,6 +30,8 @@ class TripsController < ApplicationController
 
     respond_to do |format|
       if @trip.save
+        # Create the ownership membership
+        @trip.trip_memberships.create!(user: current_user, role: "owner")
         format.html { redirect_to @trip, notice: "Trip was successfully created." }
         format.json { render :show, status: :created, location: @trip }
       else

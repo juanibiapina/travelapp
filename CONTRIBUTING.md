@@ -51,10 +51,24 @@ The Travel App has a simple but effective data model:
 - Includes provider/uid fields for OAuth integration
 
 **Trip**
-- Belongs to a user
+- Belongs to a user (as owner)
 - Has a name field
 - Can contain multiple links
+- Supports multiple members through trip memberships
+- Can have shareable invite links for joining
 - Represents a travel plan or itinerary
+
+**TripMembership**
+- Join table connecting users to trips
+- Tracks user roles (owner/member) within trips
+- Ensures one membership per user per trip
+- Enables multi-user trip collaboration
+
+**Invite**
+- Belongs to a trip and created by a user
+- Contains secure tokens for sharing trip access
+- Can be activated/deactivated and optionally expire
+- Enables easy trip sharing without email invitations
 
 **Link**
 - Belongs to a trip
@@ -66,12 +80,23 @@ The Travel App has a simple but effective data model:
 **Authentication & Authorization**
 - User registration and login with email/password
 - Google OAuth integration for easy sign-in
-- Pundit policies for authorization (users can only access their own trips and links)
+- Role-based authorization with Pundit policies
+- Trip ownership and membership management
+- Secure invite token handling for trip sharing
 
 **Trip Management**
 - Create, view, edit, and delete trips
-- Each trip is scoped to the authenticated user
+- Multi-user trip collaboration with role-based access (owners and members)
+- Generate shareable invite links for easy trip joining
+- Revoke invite links to control access
 - Clean, responsive interface for trip management
+
+**Invite Link System**
+- Trip owners can generate secure invite links from the trip page
+- Links use cryptographically secure tokens for safety
+- Users can join trips by clicking invite links (authentication required)
+- Automatic redirection flow for unauthenticated users
+- Support for link revocation and optional expiration
 
 **Link Organization**
 - Add links to trips for organizing travel-related URLs
@@ -101,13 +126,20 @@ The Travel App has a simple but effective data model:
 
 **TripsController**
 - Standard CRUD operations for trips
+- Trip membership management
 - Requires user authentication
-- Uses Pundit for authorization
+- Uses Pundit for role-based authorization
+
+**InvitesController**
+- Generates and manages invite links for trips
+- Handles invite acceptance with authentication flow
+- Supports invite revocation by trip owners
+- Manages session-based invite token storage
 
 **LinksController**
 - Nested CRUD operations under trips
 - Requires user authentication
-- Ensures users can only access links for their own trips
+- Ensures users can only access links for trips they belong to
 
 ### Development Workflow
 
@@ -120,9 +152,11 @@ All development commands use the `bin/` prefix for consistency and to ensure the
 
 ### Database Schema
 
-The application uses three main tables:
+The application uses five main tables:
 - `users` - User accounts with Devise fields and OAuth integration
-- `trips` - Travel plans belonging to users
+- `trips` - Travel plans with multi-user support
+- `trip_memberships` - Join table linking users to trips with roles
+- `invites` - Secure invite tokens for trip sharing
 - `links` - URLs associated with trips
 
 Foreign key relationships ensure data integrity, and dependent destroys clean up associated records when parent records are deleted.
