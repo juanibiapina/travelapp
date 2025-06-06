@@ -57,7 +57,7 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     # Should show members section
-    assert_select "h3", text: "Team Members"
+    assert_select "h3", text: "Members"
 
     # Should display the owner (user one)
     assert_match(/user1@example\.com/, response.body)
