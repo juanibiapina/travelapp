@@ -25,9 +25,12 @@ namespace :litestream do
     @dbs =
       ActiveRecord::Base
         .configurations
-        .configs_for(env_name: "production", include_hidden: true)
+        .configs_for(env_name: Rails.env, include_hidden: true)
         .select { |config| [ "sqlite3", "litedb" ].include? config.adapter }
         .map(&:database)
+
+    # Skip if no SQLite databases found
+    next if @dbs.empty?
 
     result = eval(Erubi::Engine.new(LITESTREAM_TEMPLATE).src)
 
@@ -45,11 +48,30 @@ namespace :litestream do
   task :run do
     require "shellwords"
 
-    exec(*%w[bundle exec litestream replicate -config],
-      LITESTREAM_CONFIG, "-exec", Shellwords.join(ARGV[1..-1]))
+    # Only run if SQLite databases exist
+    sqlite_dbs = ActiveRecord::Base
+      .configurations
+      .configs_for(env_name: Rails.env, include_hidden: true)
+      .select { |config| [ "sqlite3", "litedb" ].include? config.adapter }
+
+    if sqlite_dbs.empty?
+      puts "No SQLite databases found. Skipping Litestream and running command directly."
+      exec(*ARGV[1..-1])
+    else
+      exec(*%w[bundle exec litestream replicate -config],
+        LITESTREAM_CONFIG, "-exec", Shellwords.join(ARGV[1..-1]))
+    end
   end
 end
 
 namespace :db do
-  task prepare: "litestream:prepare"
+  task prepare: "db:load_config" do
+    # Only run litestream:prepare if SQLite databases exist
+    sqlite_dbs = ActiveRecord::Base
+      .configurations
+      .configs_for(env_name: Rails.env, include_hidden: true)
+      .select { |config| [ "sqlite3", "litedb" ].include? config.adapter }
+
+    Rake::Task["litestream:prepare"].invoke unless sqlite_dbs.empty?
+  end
 end
