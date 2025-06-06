@@ -6,6 +6,9 @@ class User < ApplicationRecord
          omniauth_providers: [ :google ]
 
   has_many :trips, dependent: :destroy
+  has_many :trip_memberships, dependent: :destroy
+  has_many :member_trips, through: :trip_memberships, source: :trip
+  has_many :created_invites, class_name: "Invite", foreign_key: "created_by_id", dependent: :destroy
 
   def self.from_omniauth(auth)
     user = where(email: auth.info.email).first_or_create do |u|
@@ -16,5 +19,12 @@ class User < ApplicationRecord
     # Update provider and uid for existing users too
     user.update(provider: auth.provider, uid: auth.uid)
     user
+  end
+
+  # Get all trips the user has access to (owned + member of)
+  def all_trips
+    Trip.joins("LEFT JOIN trip_memberships ON trips.id = trip_memberships.trip_id")
+        .where("trips.user_id = ? OR trip_memberships.user_id = ?", id, id)
+        .distinct
   end
 end

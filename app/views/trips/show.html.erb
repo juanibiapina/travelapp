@@ -2,6 +2,59 @@
   <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
     <%= render @trip %>
     
+    <% if policy(@trip).update? %>
+      <!-- Invite Links Section -->
+      <div class="mt-8 pt-6 border-t border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Invite Links</h3>
+        
+        <!-- Generate Invite Button -->
+        <div class="mb-6">
+          <%= button_to "Generate Invite Link", trip_invites_path(@trip), method: :post,
+                        class: "bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200" %>
+        </div>
+        
+        <!-- Active Invites List -->
+        <div class="space-y-3">
+          <% active_invites = @trip.invites.valid_invites %>
+          <% if active_invites.any? %>
+            <% active_invites.each do |invite| %>
+              <div class="flex items-center justify-between p-3 bg-green-50 rounded-md">
+                <div class="flex-1">
+                  <div class="text-sm text-gray-600 mb-1">Invite Link:</div>
+                  <div class="flex items-center gap-2">
+                    <input type="text" 
+                           value="<%= accept_invite_url(invite.token) %>" 
+                           readonly 
+                           class="flex-1 px-2 py-1 text-sm border border-gray-300 rounded bg-white select-all"
+                           onclick="this.select()">
+                    <button onclick="navigator.clipboard.writeText('<%= accept_invite_url(invite.token) %>')" 
+                            class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                      Copy
+                    </button>
+                  </div>
+                  <div class="text-xs text-gray-500 mt-1">
+                    Created <%= time_ago_in_words(invite.created_at) %> ago
+                    <% if invite.expires_at %>
+                      • Expires <%= time_ago_in_words(invite.expires_at) %>
+                    <% else %>
+                      • Never expires
+                    <% end %>
+                  </div>
+                </div>
+                <div class="ml-3">
+                  <%= button_to "Revoke", [@trip, invite], method: :delete,
+                                data: { confirm: "Are you sure? This will make the invite link unusable." },
+                                class: "text-red-600 hover:text-red-800 text-sm font-medium bg-transparent border-0 p-0" %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-gray-500 text-sm italic">No active invite links. Generate one to share this trip!</p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
     <!-- Links Section -->
     <div class="mt-8 pt-6 border-t border-gray-200">
       <h3 class="text-lg font-semibold text-gray-900 mb-4">Links</h3>

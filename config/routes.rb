@@ -2,9 +2,15 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"
   }
+
   resources :trips do
     resources :links
+    resources :invites, only: [ :create, :destroy ]
   end
+
+  # Public invite acceptance route
+  get "invite/:token", to: "invites#accept", as: :accept_invite
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

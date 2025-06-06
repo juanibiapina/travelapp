@@ -6,7 +6,7 @@ class TripPolicy < ApplicationPolicy
   end
 
   def show?
-    user.present? && record.user == user
+    user.present? && (record.user == user || record.member?(user))
   end
 
   def create?
@@ -14,17 +14,20 @@ class TripPolicy < ApplicationPolicy
   end
 
   def update?
-    user.present? && record.user == user
+    user.present? && record.owner?(user)
   end
 
   def destroy?
-    user.present? && record.user == user
+    user.present? && record.owner?(user)
   end
 
   class Scope < Scope
     def resolve
       if user.present?
-        scope.where(user: user)
+        # Return trips the user owns or is a member of
+        scope.joins("LEFT JOIN trip_memberships ON trips.id = trip_memberships.trip_id")
+             .where("trips.user_id = ? OR trip_memberships.user_id = ?", user.id, user.id)
+             .distinct
       else
         scope.none
       end

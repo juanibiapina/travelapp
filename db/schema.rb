@@ -10,13 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_05_153041) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_003310) do
+  create_table "invites", force: :cascade do |t|
+    t.integer "trip_id", null: false
+    t.string "token", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "expires_at"
+    t.integer "created_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_invites_on_created_by_id"
+    t.index ["token"], name: "index_invites_on_token", unique: true
+    t.index ["trip_id"], name: "index_invites_on_trip_id"
+  end
+
   create_table "links", force: :cascade do |t|
     t.string "url"
     t.integer "trip_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["trip_id"], name: "index_links_on_trip_id"
+  end
+
+  create_table "trip_memberships", force: :cascade do |t|
+    t.integer "trip_id", null: false
+    t.integer "user_id", null: false
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["trip_id", "user_id"], name: "index_trip_memberships_on_trip_id_and_user_id", unique: true
+    t.index ["trip_id"], name: "index_trip_memberships_on_trip_id"
+    t.index ["user_id"], name: "index_trip_memberships_on_user_id"
   end
 
   create_table "trips", force: :cascade do |t|
@@ -42,6 +66,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_153041) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "invites", "trips"
+  add_foreign_key "invites", "users", column: "created_by_id"
   add_foreign_key "links", "trips"
+  add_foreign_key "trip_memberships", "trips"
+  add_foreign_key "trip_memberships", "users"
   add_foreign_key "trips", "users"
 end
