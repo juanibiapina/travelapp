@@ -2,10 +2,14 @@ class MigrateAuthenticationDataToAccounts < ActiveRecord::Migration[8.0]
   def up
     # Create account records for all existing users
     User.find_each do |user|
-      Account.create!(
+      # For users without passwords (OAuth users), generate a random password
+      password = user.encrypted_password.present? ? user.encrypted_password : Devise::Encryptor.digest(Account, Devise.friendly_token[0, 20])
+
+      # Skip validations during migration to avoid password presence validation
+      account = Account.new(
         user: user,
         email: user.email,
-        encrypted_password: user.encrypted_password,
+        encrypted_password: password,
         provider: user.provider,
         uid: user.uid,
         reset_password_token: user.reset_password_token,
@@ -14,6 +18,7 @@ class MigrateAuthenticationDataToAccounts < ActiveRecord::Migration[8.0]
         created_at: user.created_at,
         updated_at: user.updated_at
       )
+      account.save!(validate: false)
     end
   end
 
