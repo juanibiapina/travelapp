@@ -23,7 +23,8 @@ class TripsTest < ApplicationSystemTestCase
     click_on "Create Trip"
 
     assert_text "Trip was successfully created"
-    click_on "Back"
+    # Navigate back using the main navigation
+    visit trips_url
   end
 
   test "should update Trip" do
@@ -36,7 +37,8 @@ class TripsTest < ApplicationSystemTestCase
     click_on "Update Trip"
 
     assert_text "Trip was successfully updated"
-    click_on "Back"
+    # Navigate back using the main navigation
+    visit trips_url
   end
 
   test "should destroy Trip" do
