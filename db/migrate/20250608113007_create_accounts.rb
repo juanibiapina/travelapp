@@ -15,6 +15,6 @@ class CreateAccounts < ActiveRecord::Migration[8.0]
 
     add_index :accounts, :email, unique: true
     add_index :accounts, :reset_password_token, unique: true
-    add_index :accounts, [:provider, :uid], unique: true
+    add_index :accounts, [ :provider, :uid ], unique: true
   end
 end

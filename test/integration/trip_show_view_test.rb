@@ -62,11 +62,11 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
     assert_select "h3", text: "Members"
 
     # Should display the owner (user one)
-    assert_match(/user1@example\.com/, response.body)
+    assert_match(/User One/, response.body)
     assert_match(/Owner/, response.body)
 
     # Should display the member (user three from fixtures)
-    assert_match(/user3@example\.com/, response.body)
+    assert_match(/User Three/, response.body)
     assert_match(/Member/, response.body)
   end
 end

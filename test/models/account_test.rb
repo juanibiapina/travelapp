@@ -24,7 +24,7 @@ class AccountTest < ActiveSupport::TestCase
   test "should create account and user from omniauth" do
     auth = google_auth_hash
 
-    assert_difference ["Account.count", "User.count"], 1 do
+    assert_difference [ "Account.count", "User.count" ], 1 do
       account = Account.from_omniauth(auth)
       assert account.persisted?
       assert_equal "test@example.com", account.email
@@ -46,7 +46,7 @@ class AccountTest < ActiveSupport::TestCase
 
     auth = google_auth_hash(email: "existing@example.com", name: "Updated User", image: "https://example.com/existing.jpg")
 
-    assert_no_difference ["Account.count", "User.count"] do
+    assert_no_difference [ "Account.count", "User.count" ] do
       account = Account.from_omniauth(auth)
       assert_equal existing_account.id, account.id
       assert_equal "existing@example.com", account.email
@@ -67,7 +67,7 @@ class AccountTest < ActiveSupport::TestCase
     # Try to create/find account with same email but different uid
     auth2 = google_auth_hash(email: "multi@example.com", uid: "222", name: "Multi User Updated", image: "https://example.com/multi2.jpg")
 
-    assert_no_difference ["Account.count", "User.count"] do
+    assert_no_difference [ "Account.count", "User.count" ] do
       account2 = Account.from_omniauth(auth2)
       assert_equal account1.id, account2.id
       assert_equal "multi@example.com", account2.email

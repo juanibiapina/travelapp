@@ -31,7 +31,7 @@ class MigrateAuthenticationDataToAccounts < ActiveRecord::Migration[8.0]
         remember_created_at: account.remember_created_at
       )
     end
-    
+
     Account.delete_all
   end
 end
