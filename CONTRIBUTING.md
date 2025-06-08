@@ -158,3 +158,16 @@ The application uses five main tables:
 - `links` - URLs associated with trips
 
 Foreign key relationships ensure data integrity, and dependent destroys clean up associated records when parent records are deleted.
+
+## Installing the `pg` gem
+
+To install the `pg` gem on macOS, install libpq:
+```sh
+brew install libpq
+```
+
+And then install the `pg` gem:
+
+``` sh
+gem install pg -- --with-pg-config=/opt/homebrew/opt/libpq/bin/pg_config
+```
