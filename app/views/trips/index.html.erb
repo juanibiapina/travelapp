@@ -75,7 +75,7 @@
               <div class="flex items-center mb-4">
                 <div class="flex-shrink-0">
                   <% if owner.picture.present? %>
-                    <img src="<%= owner.picture %>" alt="<%= owner.name || owner.email %>" class="w-8 h-8 rounded-full object-cover">
+                    <img src="<%= owner.picture %>" alt="<%= owner.name || (owner.account&.email) %>" class="w-8 h-8 rounded-full object-cover">
                   <% else %>
                     <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                       <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +86,7 @@
                 </div>
                 <div class="ml-3">
                   <p class="text-sm font-medium text-gray-900">
-                    <%= owner.name.present? ? owner.name : owner.email.split('@').first.titleize %>
+                    <%= owner.name.present? ? owner.name : (owner.account&.email&.split('@')&.first&.titleize || "Unknown User") %>
                   </p>
                   <p class="text-xs text-gray-500">Trip Owner</p>
                 </div>

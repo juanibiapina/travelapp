@@ -11,12 +11,12 @@ class AccountTest < ActiveSupport::TestCase
         image: image
       }
     })
-    
+
     # Manually override the name if it should be nil
     if name.nil?
       hash.info.delete(:name)
     end
-    
+
     hash
   end
 
@@ -72,7 +72,7 @@ class AccountTest < ActiveSupport::TestCase
     user = User.create!(name: "Multi Provider User")
     account = Account.create!(
       user: user,
-      email: "multi@example.com", 
+      email: "multi@example.com",
       password: "password123",
       provider: "github",
       uid: "github123"
@@ -121,9 +121,9 @@ class AccountTest < ActiveSupport::TestCase
   test "should validate uniqueness of email" do
     user1 = User.create!(name: "User 1")
     user2 = User.create!(name: "User 2")
-    
+
     Account.create!(user: user1, email: "unique@example.com", password: "password123")
-    
+
     duplicate_account = Account.new(user: user2, email: "unique@example.com", password: "password123")
     assert_not duplicate_account.valid?
     assert_includes duplicate_account.errors[:email], "has already been taken"

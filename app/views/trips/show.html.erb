@@ -29,7 +29,7 @@
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <% if membership.user.picture.present? %>
-                    <img src="<%= membership.user.picture %>" alt="<%= membership.user.name || membership.user.email %>" class="w-8 h-8 rounded-full object-cover">
+                    <img src="<%= membership.user.picture %>" alt="<%= membership.user.name || (membership.user.account&.email) %>" class="w-8 h-8 rounded-full object-cover">
                   <% else %>
                     <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                       <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@
                 </div>
                 <div class="ml-3">
                   <div class="text-sm font-medium text-gray-900">
-                    <%= membership.user.name.present? ? membership.user.name : membership.user.email %>
+                    <%= membership.user.name.present? ? membership.user.name : (membership.user.account&.email || "Unknown User") %>
                   </div>
                 </div>
               </div>

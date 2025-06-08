@@ -13,10 +13,10 @@ class Account < ApplicationRecord
       a.password = Devise.friendly_token[0, 20]
       a.provider = auth.provider
       a.uid = auth.uid
-      
+
       # Create associated user with proper name handling
-      name_value = auth.info[:name] || auth.info['name']
-      user_name = name_value.present? ? name_value : auth.info.email.split('@').first
+      name_value = auth.info[:name] || auth.info["name"]
+      user_name = name_value.present? ? name_value : auth.info.email.split("@").first
       a.user = User.create!(
         name: user_name,
         picture: auth.info.image
@@ -28,9 +28,9 @@ class Account < ApplicationRecord
       provider: auth.provider,
       uid: auth.uid
     )
-    
+
     # Update user info only if name is present and not nil/empty
-    name_value = auth.info[:name] || auth.info['name']
+    name_value = auth.info[:name] || auth.info["name"]
     if name_value.present?
       account.user.update(
         name: name_value,
@@ -40,7 +40,7 @@ class Account < ApplicationRecord
       # Update picture even if no name
       account.user.update(picture: auth.info.image)
     end
-    
+
     account
   end
 end

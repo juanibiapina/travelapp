@@ -14,7 +14,7 @@ class MigrateUsersToAccounts < ActiveRecord::Migration[8.0]
       )
     end
   end
-  
+
   def down
     # Remove all accounts
     Account.delete_all

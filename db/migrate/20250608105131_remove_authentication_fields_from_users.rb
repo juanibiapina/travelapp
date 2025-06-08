@@ -9,10 +9,10 @@ class RemoveAuthenticationFieldsFromUsers < ActiveRecord::Migration[8.0]
     remove_column :users, :provider, :string
     remove_column :users, :uid, :string
     remove_column :users, :has_account, :boolean
-    
+
     # Remove email and provider/uid indexes
     remove_index :users, :email if index_exists?(:users, :email)
-    remove_index :users, [:provider, :uid] if index_exists?(:users, [:provider, :uid])
+    remove_index :users, [ :provider, :uid ] if index_exists?(:users, [ :provider, :uid ])
     remove_index :users, :reset_password_token if index_exists?(:users, :reset_password_token)
   end
 end
