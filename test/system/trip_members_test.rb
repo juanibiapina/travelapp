@@ -69,7 +69,7 @@ class TripMembersTest < ApplicationSystemTestCase
     visit members_trip_path(@trip)
 
     # Find the member and click edit
-    find("div", text: "Editable Member").ancestor("div.flex.items-center.justify-between").find("a[title='Edit member']").click
+    find("div.text-sm.font-medium", text: "Editable Member").ancestor("div.flex.items-center.justify-between").find("a[title='Edit member']").click
 
     fill_in "user_name", with: "Updated Member Name"
     click_on "Update User"
