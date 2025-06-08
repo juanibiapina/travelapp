@@ -6,7 +6,8 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @trip = trips(:one)
     @user = users(:one)
-    sign_in @user
+    @account = accounts(:one)
+    sign_in @account
   end
 
   test "should get index" do

@@ -1,5 +1,5 @@
 class InvitesController < ApplicationController
-  before_action :authenticate_user!, except: [ :accept ]
+  before_action :authenticate_account!, except: [ :accept ]
   before_action :set_trip, only: [ :create, :destroy ]
   before_action :set_invite, only: [ :destroy ]
 

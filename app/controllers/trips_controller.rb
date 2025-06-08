@@ -1,5 +1,5 @@
 class TripsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_account!
   before_action :set_trip, only: %i[ show edit update destroy ]
 
   # GET /trips or /trips.json

@@ -6,8 +6,9 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @trip = trips(:one)
     @user = users(:one)
+    @account = accounts(:one)
     @invite = invites(:one)
-    sign_in @user
+    sign_in @account
   end
 
   test "should create invite" do
@@ -34,7 +35,7 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should accept valid invite when signed in" do
-    sign_in users(:two) # Different user
+    sign_in accounts(:two) # Different user
 
     get accept_invite_url(@invite.token)
 
@@ -43,11 +44,11 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should redirect to sign in when not signed in" do
-    sign_out @user
+    sign_out @account
 
     get accept_invite_url(@invite.token)
 
-    assert_redirected_to new_user_session_url
+    assert_redirected_to new_account_session_url
   end
 
   test "should handle invalid invite token" do

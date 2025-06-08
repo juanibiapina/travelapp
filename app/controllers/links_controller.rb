@@ -1,5 +1,5 @@
 class LinksController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_account!
   before_action :set_trip
   before_action :set_link, only: %i[ show edit update destroy ]
 
