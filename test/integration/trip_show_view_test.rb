@@ -17,11 +17,12 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
     # Clear any existing invites first
     @trip.invites.destroy_all
 
-    get trip_path(@trip)
+    # Go to the invitations tab
+    get trip_invites_path(@trip)
     assert_response :success
 
     # Should show invite section
-    assert_select "h3", text: "Invite Links"
+    assert_select "h2", text: "Invite Links"
     assert_select "button", text: "Generate New Link"
     # Check for the exact text in the view when no invites exist
     assert_match(/No active invite links/, response.body)
@@ -30,7 +31,8 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
   test "trip show page displays active invites" do
     invite = @trip.invites.create!(created_by: @trip_owner)
 
-    get trip_path(@trip)
+    # Go to the invitations tab
+    get trip_invites_path(@trip)
     assert_response :success
 
     # Should show the invite
@@ -46,20 +48,21 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
     sign_out @trip_owner_account
     sign_in @member_account
 
-    get trip_path(@trip)
+    # Go to the invitations tab
+    get trip_invites_path(@trip)
     assert_response :success
 
-    # Should not show invite section
-    assert_select "h3", text: "Invite Links", count: 0
+    # Should not show invite section (generate button won't be there for non-owners)
     assert_select "button", text: "Generate New Link", count: 0
   end
 
   test "trip show page displays members section" do
-    get trip_path(@trip)
+    # Go to the members tab
+    get members_trip_path(@trip)
     assert_response :success
 
     # Should show members section
-    assert_select "h3", text: "Members"
+    assert_select "h2", text: "Trip Members"
 
     # Should display the owner (user one)
     assert_match(/User One/, response.body)

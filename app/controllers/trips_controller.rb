@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_action :authenticate_account!
-  before_action :set_trip, only: %i[ show edit update destroy ]
+  before_action :set_trip, only: %i[ show edit update destroy members ]
 
   # GET /trips or /trips.json
   def index
@@ -10,6 +10,12 @@ class TripsController < ApplicationController
   # GET /trips/1 or /trips/1.json
   def show
     authorize @trip
+  end
+
+  # GET /trips/1/members
+  def members
+    authorize @trip, :show?
+    @memberships = @trip.trip_memberships.includes(:user)
   end
 
   # GET /trips/new

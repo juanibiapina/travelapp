@@ -23,7 +23,7 @@ class InviteFlowIntegrationTest < ActionDispatch::IntegrationTest
     assert_difference "Invite.count", 1 do
       post trip_invites_path(@trip)
     end
-    assert_redirected_to trip_path(@trip)
+    assert_redirected_to trip_invites_path(@trip)
 
     invite = Invite.last
     assert_equal @trip, invite.trip
@@ -94,7 +94,7 @@ class InviteFlowIntegrationTest < ActionDispatch::IntegrationTest
     # Trip owner revokes the invite
     sign_in @trip_owner_account
     delete trip_invite_path(@trip, invite)
-    assert_redirected_to trip_path(@trip)
+    assert_redirected_to trip_invites_path(@trip)
 
     sign_out @trip_owner_account
 

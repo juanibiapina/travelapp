@@ -24,7 +24,7 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
       post trip_links_url(@trip), params: { link: { url: "https://example.com" } }
     end
 
-    assert_redirected_to trip_url(@trip)
+    assert_redirected_to trip_links_url(@trip)
   end
 
   test "should not create link with invalid url" do
@@ -32,7 +32,7 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
       post trip_links_url(@trip), params: { link: { url: "not-a-url" } }
     end
 
-    assert_redirected_to trip_url(@trip)
+    assert_redirected_to trip_links_url(@trip)
     follow_redirect!
     assert_select ".bg-red-100", text: /must be a valid URL/
   end
@@ -57,6 +57,6 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
       delete trip_link_url(@trip, @link)
     end
 
-    assert_redirected_to trip_url(@trip)
+    assert_redirected_to trip_links_url(@trip)
   end
 end

@@ -11,18 +11,19 @@ class LinksTest < ApplicationSystemTestCase
 
   test "visiting the index" do
     visit trip_links_url(@trip)
-    assert_selector "h1", text: "Links"
+    assert_selector "h2", text: "Useful Links"
   end
 
   test "should create link" do
     visit trip_links_url(@trip)
-    click_on "New link"
+    click_on "Add New Link"
 
     fill_in "Url", with: @link.url
     click_on "Create Link"
 
     assert_text "Link was successfully created"
-    click_on "Back to Trips"
+    # Navigate back using the main navigation
+    visit trips_url
   end
 
   test "should update Link" do

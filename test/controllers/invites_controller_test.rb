@@ -16,7 +16,7 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
       post trip_invites_url(@trip)
     end
 
-    assert_redirected_to trip_url(@trip)
+    assert_redirected_to trip_invites_url(@trip)
     assert_equal @user, Invite.last.created_by
   end
 
@@ -28,7 +28,7 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
     delete trip_invite_url(@trip, @invite)
 
     # Should be revoked but not destroyed
-    assert_redirected_to trip_url(@trip)
+    assert_redirected_to trip_invites_url(@trip)
     @invite.reload
     assert_not @invite.active?
     assert_not @invite.invite_valid?
