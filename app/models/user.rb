@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :omniauthable,
          omniauth_providers: [ :google ]
 
+  has_one :account, dependent: :destroy
   has_many :trip_memberships, dependent: :destroy
   has_many :member_trips, through: :trip_memberships, source: :trip
   has_many :created_invites, class_name: "Invite", foreign_key: "created_by_id", dependent: :destroy
