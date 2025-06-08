@@ -1,0 +1,30 @@
+<%= form_with(model: trip_member, url: (@trip_member&.persisted? ? trip_trip_member_path(@trip, @trip_member) : trip_trip_members_path(@trip)), local: true) do |form| %>
+  <% if trip_member.errors.any? %>
+    <div id="error_explanation" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+      <h2 class="text-red-800 font-medium mb-2"><%= pluralize(trip_member.errors.count, "error") %> prohibited this trip member from being saved:</h2>
+      <ul class="list-disc list-inside text-red-700">
+        <% trip_member.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="space-y-6">
+    <div>
+      <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.text_field :name, class: "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+    </div>
+
+    <div>
+      <%= form.label :picture, "Profile Picture URL", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.url_field :picture, class: "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+      <p class="mt-1 text-sm text-gray-500">Optional: Enter a URL for the member's profile picture</p>
+    </div>
+  </div>
+
+  <div class="mt-8 flex items-center justify-end space-x-4">
+    <%= link_to "Cancel", members_trip_path(@trip), class: "px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors duration-200" %>
+    <%= form.submit class: "px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200" %>
+  </div>
+<% end %>

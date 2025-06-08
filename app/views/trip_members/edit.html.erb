@@ -1,0 +1,16 @@
+<% content_for :title, "Edit Trip Member" %>
+
+<%= render "trips/header_with_tabs" %>
+
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-4 py-5 sm:p-6">
+      <div class="mb-6">
+        <h2 class="text-lg font-medium text-gray-900">Edit Trip Member</h2>
+        <p class="mt-1 text-sm text-gray-600">Update member information</p>
+      </div>
+      
+      <%= render "form", trip_member: @trip_member %>
+    </div>
+  </div>
+</div>

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :trips do
     resources :links
     resources :invites, only: [ :create, :destroy, :index ]
+    resources :trip_members, except: [ :index, :show ]
     get :members, on: :member
   end
 
