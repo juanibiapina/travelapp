@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :trips do
     resources :links
     resources :invites, only: [ :create, :destroy ]
+    resources :members, controller: :trip_members, except: [ :index, :show ]
   end
 
   # Public invite acceptance route

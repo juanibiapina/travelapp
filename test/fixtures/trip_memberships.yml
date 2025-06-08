@@ -14,3 +14,8 @@ three:
   trip: one
   user: three
   role: member
+
+four:
+  trip: one
+  user: four
+  role: member

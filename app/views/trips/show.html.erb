@@ -9,18 +9,24 @@
     <div class="p-8">
       <!-- Members Section -->
       <div class="mb-10">
-        <div class="flex items-center mb-6">
-          <div class="flex-shrink-0">
-            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-              </svg>
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-xl font-semibold text-gray-900">Members</h3>
+              <p class="text-sm text-gray-600">People who have access to this trip</p>
             </div>
           </div>
-          <div class="ml-4">
-            <h3 class="text-xl font-semibold text-gray-900">Members</h3>
-            <p class="text-sm text-gray-600">People who have access to this trip</p>
-          </div>
+          <% if policy(@trip).update? %>
+            <%= link_to "Add Member", new_trip_member_path(@trip),
+                        class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+          <% end %>
         </div>
         
         <div class="grid gap-3">
@@ -29,7 +35,7 @@
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <% if membership.user.picture.present? %>
-                    <img src="<%= membership.user.picture %>" alt="<%= membership.user.name || membership.user.account&.email %>" class="w-8 h-8 rounded-full object-cover">
+                    <img src="<%= membership.user.picture %>" alt="<%= membership.user.display_name %>" class="w-8 h-8 rounded-full object-cover">
                   <% else %>
                     <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                       <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,11 +46,14 @@
                 </div>
                 <div class="ml-3">
                   <div class="text-sm font-medium text-gray-900">
-                    <%= membership.user.name.present? ? membership.user.name : membership.user.account&.email %>
+                    <%= membership.user.display_name %>
                   </div>
+                  <% unless membership.user.account? %>
+                    <div class="text-xs text-gray-500">No account</div>
+                  <% end %>
                 </div>
               </div>
-              <div class="flex-shrink-0">
+              <div class="flex items-center gap-2">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium <%= membership.role == 'owner' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' %>">
                   <% if membership.role == 'owner' %>
                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -53,6 +62,15 @@
                   <% end %>
                   <%= membership.role.titleize %>
                 </span>
+                <% if policy(@trip).update? && !membership.user.account? && membership.role != 'owner' %>
+                  <div class="flex items-center gap-1">
+                    <%= link_to "Edit", edit_trip_member_path(@trip, membership.user), 
+                                class: "text-blue-600 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition-colors duration-200" %>
+                    <%= button_to "Remove", trip_member_path(@trip, membership.user), method: :delete,
+                                  data: { confirm: "Are you sure? This will remove #{membership.user.display_name} from the trip." },
+                                  class: "text-red-600 hover:text-red-800 text-xs font-medium bg-transparent border-0 px-2 py-1 rounded transition-colors duration-200" %>
+                  </div>
+                <% end %>
               </div>
             </div>
           <% end %>
