@@ -1,7 +1,12 @@
 class InvitesController < ApplicationController
   before_action :authenticate_account!, except: [ :accept ]
-  before_action :set_trip, only: [ :create, :destroy ]
+  before_action :set_trip, only: [ :create, :destroy, :index ]
   before_action :set_invite, only: [ :destroy ]
+
+  def index
+    authorize @trip, :show?
+    @invites = @trip.invites.valid_invites
+  end
 
   def create
     authorize @trip, :show? # User must be able to see the trip

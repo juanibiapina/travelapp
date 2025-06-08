@@ -1,0 +1,79 @@
+<% content_for :title, "Invitations" %>
+
+<%= render "header_with_tabs" %>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-4 py-5 sm:p-6">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-lg font-medium text-gray-900">Invite Links</h2>
+          <p class="mt-1 text-sm text-gray-600">Share your trip with others</p>
+        </div>
+        <% if policy(@trip).update? %>
+          <%= button_to "Generate New Link", trip_invites_path(@trip), method: :post,
+                        class: "inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" %>
+        <% end %>
+      </div>
+      
+      <div class="space-y-3">
+        <% if @invites.any? %>
+          <% @invites.each do |invite| %>
+            <div class="border border-green-200 bg-green-50 rounded-lg p-4">
+              <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-2">
+                    <input type="text" 
+                           value="<%= accept_invite_url(invite.token) %>" 
+                           readonly 
+                           class="flex-1 px-3 py-2 text-sm border border-green-300 rounded-md bg-white font-mono select-all focus:outline-none focus:ring-2 focus:ring-green-500"
+                           onclick="this.select()">
+                    <button onclick="navigator.clipboard.writeText('<%= accept_invite_url(invite.token) %>'); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000)" 
+                            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-md transition duration-200">
+                      Copy
+                    </button>
+                  </div>
+                  <div class="text-xs text-green-700">
+                    <span class="inline-flex items-center">
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                      </svg>
+                      Created <%= time_ago_in_words(invite.created_at) %> ago
+                    </span>
+                    <span class="mx-2">•</span>
+                    <% if invite.expires_at %>
+                      <span>Expires <%= time_ago_in_words(invite.expires_at) %></span>
+                    <% else %>
+                      <span>Never expires</span>
+                    <% end %>
+                  </div>
+                </div>
+                <% if policy(@trip).update? %>
+                  <div class="ml-4 flex-shrink-0">
+                    <%= button_to "Revoke", [@trip, invite], method: :delete,
+                                  data: { confirm: "Are you sure? This will make the invite link unusable." },
+                                  class: "text-red-600 hover:text-red-800 text-sm font-medium bg-transparent border-0 p-1" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No active invite links</h3>
+            <p class="mt-1 text-sm text-gray-500">Generate an invite link to share this trip with others</p>
+            <% if policy(@trip).update? %>
+              <div class="mt-6">
+                <%= button_to "Generate New Link", trip_invites_path(@trip), method: :post,
+                              class: "inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

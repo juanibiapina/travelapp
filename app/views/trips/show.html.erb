@@ -1,31 +1,120 @@
-<div class="max-w-4xl mx-auto">
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-    <!-- Trip Header -->
-    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-8 py-6">
-      <%= render @trip %>
-    </div>
-    
-    <!-- Main Content -->
-    <div class="p-8">
-      <!-- Members Section -->
-      <div class="mb-10">
-        <div class="flex items-center mb-6">
-          <div class="flex-shrink-0">
-            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-              </svg>
-            </div>
+<% content_for :title, @trip.name %>
+
+<%= render "header_with_tabs" %>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Main content -->
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-lg shadow">
+        <div class="px-4 py-5 sm:p-6">
+          <div class="mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Trip Overview</h2>
+            <p class="mt-1 text-sm text-gray-600">General information about your trip</p>
           </div>
-          <div class="ml-4">
-            <h3 class="text-xl font-semibold text-gray-900">Members</h3>
-            <p class="text-sm text-gray-600">People who have access to this trip</p>
+          
+          <!-- Trip Details -->
+          <div class="space-y-4">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Trip Name</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @trip.name %></dd>
+            </div>
+            <% if @trip.start_date.present? %>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Start Date</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @trip.start_date.strftime("%B %d, %Y") %></dd>
+              </div>
+            <% end %>
+            <% if @trip.end_date.present? %>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">End Date</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @trip.end_date.strftime("%B %d, %Y") %></dd>
+              </div>
+            <% end %>
+          </div>
+          
+          <!-- Actions -->
+          <div class="mt-8 flex flex-wrap gap-3">
+            <%= link_to edit_trip_path(@trip), class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+              </svg>
+              Edit Trip
+            <% end %>
+            <%= button_to [@trip], method: :delete, 
+                          data: { confirm: "Are you sure? This action cannot be undone." },
+                          class: "inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+              Delete Trip
+            <% end %>
           </div>
         </div>
-        
-        <div class="grid gap-3">
-          <% @trip.trip_memberships.includes(:user).each do |membership| %>
-            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+      </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="lg:col-span-1">
+      <!-- Quick Stats -->
+      <div class="bg-white rounded-lg shadow mb-6">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Stats</h3>
+          <div class="grid grid-cols-1 gap-4">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-gray-900"><%= pluralize(@trip.trip_memberships.count, 'member') %></p>
+                <p class="text-sm text-gray-500">Trip members</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-gray-900"><%= pluralize(@trip.links.count, 'link') %></p>
+                <p class="text-sm text-gray-500">Useful links</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-gray-900"><%= pluralize(@trip.invites.valid_invites.count, 'active invitation') %></p>
+                <p class="text-sm text-gray-500">Pending invites</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recent Members -->
+      <div class="bg-white rounded-lg shadow">
+        <div class="px-4 py-5 sm:p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Recent Members</h3>
+            <%= link_to "View all", members_trip_path(@trip), class: "text-sm text-blue-600 hover:text-blue-800" %>
+          </div>
+          <div class="space-y-3">
+            <% @trip.trip_memberships.includes(:user).limit(3).each do |membership| %>
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <% if membership.user.picture.present? %>
@@ -38,195 +127,16 @@
                     </div>
                   <% end %>
                 </div>
-                <div class="ml-3">
-                  <div class="text-sm font-medium text-gray-900">
+                <div class="ml-3 flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 truncate">
                     <%= membership.user.name.present? ? membership.user.name : membership.user.account&.email %>
-                  </div>
-                </div>
-              </div>
-              <div class="flex-shrink-0">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium <%= membership.role == 'owner' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' %>">
-                  <% if membership.role == 'owner' %>
-                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM15.657 6.343a1 1 0 011.414 0A9.972 9.972 0 0119 12a9.972 9.972 0 01-1.929 5.657 1 1 0 11-1.414-1.414A7.971 7.971 0 0017 12c0-2.21-.896-4.21-2.343-5.657a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                    </svg>
-                  <% end %>
-                  <%= membership.role.titleize %>
-                </span>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      </div>
-      
-      <% if policy(@trip).update? %>
-        <!-- Invite Links Section -->
-        <div class="mb-10">
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="ml-4">
-                <h3 class="text-xl font-semibold text-gray-900">Invite Links</h3>
-                <p class="text-sm text-gray-600">Share your trip with others</p>
-              </div>
-            </div>
-            <%= button_to "Generate New Link", trip_invites_path(@trip), method: :post,
-                          class: "inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" %>
-          </div>
-          
-          <!-- Active Invites List -->
-          <div class="space-y-3">
-            <% active_invites = @trip.invites.valid_invites %>
-            <% if active_invites.any? %>
-              <% active_invites.each do |invite| %>
-                <div class="border border-green-200 bg-green-50 rounded-lg p-4">
-                  <div class="flex items-center justify-between">
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center gap-2 mb-2">
-                        <input type="text" 
-                               value="<%= accept_invite_url(invite.token) %>" 
-                               readonly 
-                               class="flex-1 px-3 py-2 text-sm border border-green-300 rounded-md bg-white font-mono select-all focus:outline-none focus:ring-2 focus:ring-green-500"
-                               onclick="this.select()">
-                        <button onclick="navigator.clipboard.writeText('<%= accept_invite_url(invite.token) %>'); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000)" 
-                                class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-md transition duration-200">
-                          Copy
-                        </button>
-                      </div>
-                      <div class="text-xs text-green-700">
-                        <span class="inline-flex items-center">
-                          <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                          </svg>
-                          Created <%= time_ago_in_words(invite.created_at) %> ago
-                        </span>
-                        <span class="mx-2">•</span>
-                        <% if invite.expires_at %>
-                          <span>Expires <%= time_ago_in_words(invite.expires_at) %></span>
-                        <% else %>
-                          <span>Never expires</span>
-                        <% end %>
-                      </div>
-                    </div>
-                    <div class="ml-4 flex-shrink-0">
-                      <%= button_to "Revoke", [@trip, invite], method: :delete,
-                                    data: { confirm: "Are you sure? This will make the invite link unusable." },
-                                    class: "text-red-600 hover:text-red-800 text-sm font-medium bg-transparent border-0 p-1" %>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
-            <% else %>
-              <div class="text-center py-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                </svg>
-                <p class="mt-2 text-sm text-gray-600">No active invite links</p>
-                <p class="text-xs text-gray-500">Generate one to share this trip with others</p>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-      
-      <!-- Links Section -->
-      <div class="mb-10">
-        <div class="flex items-center mb-6">
-          <div class="flex-shrink-0">
-            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <h3 class="text-xl font-semibold text-gray-900">Useful Links</h3>
-            <p class="text-sm text-gray-600">Save important websites and resources</p>
-          </div>
-        </div>
-        
-        <!-- Add Link Form -->
-        <div class="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
-          <% new_link = @trip.links.build %>
-          <%= form_with(model: [@trip, new_link], local: true, class: "flex gap-3") do |form| %>
-            <%= form.url_field :url, placeholder: "Paste a link here (e.g., hotel booking, flight confirmation)...", 
-                              class: "flex-1 px-4 py-2 border border-purple-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-gray-500" %>
-            <%= form.submit "Add Link", class: "px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" %>
-          <% end %>
-        </div>
-        
-        <!-- Links List -->
-        <div id="links" class="space-y-3">
-          <% persisted_links = @trip.links.select(&:persisted?) %>
-          <% if persisted_links.any? %>
-            <% persisted_links.each do |link| %>
-              <div class="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:border-purple-300 hover:shadow-sm transition-all duration-200">
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0 mr-3">
-                      <div class="w-8 h-8 bg-purple-100 rounded-md flex items-center justify-center">
-                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                        </svg>
-                      </div>
-                    </div>
-                    <%= link_to h(link.url), safe_link_url(link.url), target: "_blank", rel: "noopener", 
-                              class: "text-purple-600 hover:text-purple-800 font-medium truncate transition-colors duration-200" %>
-                  </div>
-                </div>
-                <div class="flex items-center gap-2 ml-4 flex-shrink-0">
-                  <%= link_to "Edit", edit_trip_link_path(@trip, link), 
-                            class: "text-blue-600 hover:text-blue-800 text-sm font-medium px-2 py-1 rounded transition-colors duration-200" %>
-                  <%= button_to "Delete", [@trip, link], method: :delete, 
-                              data: { confirm: "Are you sure?" },
-                              class: "text-red-600 hover:text-red-800 text-sm font-medium bg-transparent border-0 px-2 py-1 rounded transition-colors duration-200" %>
+                  </p>
+                  <p class="text-xs text-gray-500"><%= membership.role.titleize %></p>
                 </div>
               </div>
             <% end %>
-          <% else %>
-            <div class="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-              </svg>
-              <p class="mt-2 text-sm text-gray-600">No links added yet</p>
-              <p class="text-xs text-gray-500">Add useful links like hotels, flights, or activities above</p>
-            </div>
-          <% end %>
+          </div>
         </div>
-      </div>
-    </div>
-    
-    <!-- Action Footer -->
-    <div class="bg-gray-50 px-8 py-4 border-t border-gray-200">
-      <div class="flex flex-wrap gap-3 justify-between">
-        <div class="flex flex-wrap gap-3">
-          <%= link_to edit_trip_path(@trip), class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" do %>
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-            </svg>
-            Edit Trip
-          <% end %>
-          <%= link_to trips_path, class: "inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" do %>
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
-            Back to Trips
-          <% end %>
-        </div>
-        <%= button_to [@trip], method: :delete, 
-                      data: { confirm: "Are you sure? This action cannot be undone." },
-                      class: "inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" do %>
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-          </svg>
-          Delete Trip
-        <% end %>
       </div>
     </div>
   </div>
