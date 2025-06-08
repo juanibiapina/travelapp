@@ -2,7 +2,8 @@ require "test_helper"
 
 class TripMembershipWithoutAccountTest < ActiveSupport::TestCase
   setup do
-    @trip_owner = User.create!(email: "owner@example.com", password: "password123")
+    @trip_owner = User.create!(name: "Trip Owner")
+    @trip_owner_account = Account.create!(user: @trip_owner, email: "owner@example.com", password: "password123")
     @trip = Trip.create!(
       name: "Family Trip",
       start_date: Date.current,
@@ -12,7 +13,7 @@ class TripMembershipWithoutAccountTest < ActiveSupport::TestCase
   end
 
   test "should add user without account to trip" do
-    user_without_account = User.create!(name: "Child User", has_account: false)
+    user_without_account = User.create!(name: "Child User")
 
     assert_difference "@trip.members.count", 1 do
       membership = @trip.add_member(user_without_account)
@@ -25,7 +26,7 @@ class TripMembershipWithoutAccountTest < ActiveSupport::TestCase
   end
 
   test "should handle all_trips for user without account" do
-    user_without_account = User.create!(name: "Child User", has_account: false)
+    user_without_account = User.create!(name: "Child User")
 
     # Create another trip
     another_trip = Trip.create!(
@@ -45,8 +46,9 @@ class TripMembershipWithoutAccountTest < ActiveSupport::TestCase
   end
 
   test "should allow mixed membership types in same trip" do
-    user_with_account = User.create!(email: "member@example.com", password: "password123")
-    user_without_account = User.create!(name: "Child Member", has_account: false)
+    user_with_account = User.create!(name: "User With Account")
+    Account.create!(user: user_with_account, email: "member@example.com", password: "password123")
+    user_without_account = User.create!(name: "Child Member")
 
     @trip.add_member(user_with_account)
     @trip.add_member(user_without_account)
@@ -58,7 +60,7 @@ class TripMembershipWithoutAccountTest < ActiveSupport::TestCase
   end
 
   test "should prevent duplicate memberships for users without account" do
-    user_without_account = User.create!(name: "Child User", has_account: false)
+    user_without_account = User.create!(name: "Child User")
 
     # Add user once
     first_membership = @trip.add_member(user_without_account)

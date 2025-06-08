@@ -6,8 +6,9 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @trip = trips(:one)
     @user = users(:one)
+    @account = accounts(:one)
     @invite = invites(:one)
-    sign_in @user
+    sign_in @account
   end
 
   test "should create invite" do
