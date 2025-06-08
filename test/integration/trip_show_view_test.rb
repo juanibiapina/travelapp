@@ -5,10 +5,12 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
 
   setup do
     @trip_owner = users(:one)
+    @trip_owner_account = accounts(:one)
     @trip = trips(:one)
     @member = users(:two)
+    @member_account = accounts(:two)
 
-    sign_in @trip_owner
+    sign_in @trip_owner_account
   end
 
   test "trip show page displays invite section for owners" do
@@ -41,8 +43,8 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
     # Add the member to the trip
     @trip.add_member(@member)
 
-    sign_out @trip_owner
-    sign_in @member
+    sign_out @trip_owner_account
+    sign_in @member_account
 
     get trip_path(@trip)
     assert_response :success
@@ -60,11 +62,11 @@ class TripShowViewTest < ActionDispatch::IntegrationTest
     assert_select "h3", text: "Members"
 
     # Should display the owner (user one)
-    assert_match(/user1@example\.com/, response.body)
+    assert_match(/User One/, response.body)
     assert_match(/Owner/, response.body)
 
     # Should display the member (user three from fixtures)
-    assert_match(/user3@example\.com/, response.body)
+    assert_match(/User Three/, response.body)
     assert_match(/Member/, response.body)
   end
 end

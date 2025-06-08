@@ -1,5 +1,5 @@
 class InvitesController < ApplicationController
-  before_action :authenticate_user!, except: [ :accept ]
+  before_action :authenticate_account!, except: [ :accept ]
   before_action :set_trip, only: [ :create, :destroy ]
   before_action :set_invite, only: [ :destroy ]
 
@@ -39,7 +39,7 @@ class InvitesController < ApplicationController
     unless user_signed_in?
       # Store the invite token in session and redirect to sign in
       session[:pending_invite_token] = params[:token]
-      redirect_to new_user_session_path, notice: "Please sign in to join this trip."
+      redirect_to new_account_session_path, notice: "Please sign in to join this trip."
       return
     end
 

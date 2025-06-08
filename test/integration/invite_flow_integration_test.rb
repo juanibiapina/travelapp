@@ -5,13 +5,15 @@ class InviteFlowIntegrationTest < ActionDispatch::IntegrationTest
 
   setup do
     @trip_owner = users(:one)
+    @trip_owner_account = accounts(:one)
     @trip = trips(:one)
     @potential_member = users(:two)
+    @potential_member_account = accounts(:two)
   end
 
   test "complete invite flow: create, share, and accept invite" do
     # Step 1: Trip owner signs in and creates an invite
-    sign_in @trip_owner
+    sign_in @trip_owner_account
 
     # Visit trip page
     get trip_path(@trip)
@@ -30,13 +32,13 @@ class InviteFlowIntegrationTest < ActionDispatch::IntegrationTest
     assert invite.invite_valid?
 
     # Step 2: User signs out
-    sign_out @trip_owner
+    sign_out @trip_owner_account
 
     # Step 3: Potential member clicks invite link while not signed in
     get accept_invite_path(invite.token)
 
     # Should redirect to sign in with notice about joining trip
-    assert_redirected_to new_user_session_path
+    assert_redirected_to new_account_session_path
     follow_redirect!
     assert_match(/Please sign in to join this trip/, response.body)
 
@@ -44,7 +46,7 @@ class InviteFlowIntegrationTest < ActionDispatch::IntegrationTest
     assert_equal invite.token, session[:pending_invite_token]
 
     # Step 4: User signs in and then manually accepts the invite
-    sign_in @potential_member
+    sign_in @potential_member_account
 
     # Manually process the pending invite
     get accept_invite_path(invite.token)
@@ -69,7 +71,7 @@ class InviteFlowIntegrationTest < ActionDispatch::IntegrationTest
 
   test "invite flow when user is already signed in" do
     # Potential member is already signed in
-    sign_in @potential_member
+    sign_in @potential_member_account
 
     # Create an invite
     invite = @trip.invites.create!(created_by: @trip_owner)
@@ -90,14 +92,14 @@ class InviteFlowIntegrationTest < ActionDispatch::IntegrationTest
     invite = @trip.invites.create!(created_by: @trip_owner)
 
     # Trip owner revokes the invite
-    sign_in @trip_owner
+    sign_in @trip_owner_account
     delete trip_invite_path(@trip, invite)
     assert_redirected_to trip_path(@trip)
 
-    sign_out @trip_owner
+    sign_out @trip_owner_account
 
     # Potential member tries to use revoked invite
-    sign_in @potential_member
+    sign_in @potential_member_account
     get accept_invite_path(invite.token)
 
     # Should be rejected
@@ -112,7 +114,7 @@ class InviteFlowIntegrationTest < ActionDispatch::IntegrationTest
   test "expired invite cannot be used" do
     invite = @trip.invites.create!(created_by: @trip_owner, expires_at: 1.hour.ago)
 
-    sign_in @potential_member
+    sign_in @potential_member_account
     get accept_invite_path(invite.token)
 
     # Should be rejected
@@ -125,7 +127,7 @@ class InviteFlowIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "invalid invite token shows error" do
-    sign_in @potential_member
+    sign_in @potential_member_account
     get accept_invite_path("invalid_token")
 
     assert_redirected_to root_path

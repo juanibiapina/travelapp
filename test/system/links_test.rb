@@ -5,7 +5,8 @@ class LinksTest < ApplicationSystemTestCase
     @link = links(:one)
     @trip = trips(:one)
     @user = users(:one)
-    sign_in @user
+    @account = accounts(:one)
+    sign_in @account
   end
 
   test "visiting the index" do

@@ -6,7 +6,8 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @trip = trips(:one)
     @user = users(:one)
-    sign_in @user
+    @account = accounts(:one)
+    sign_in @account
   end
 
   test "should get index" do
@@ -56,9 +57,9 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should redirect to sign in when not authenticated" do
-    sign_out @user
+    sign_out @account
     get trips_url
-    assert_redirected_to new_user_session_path
+    assert_redirected_to new_account_session_path
   end
 
   test "should only show trips belonging to current user in index" do
