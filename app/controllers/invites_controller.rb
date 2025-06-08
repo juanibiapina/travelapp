@@ -15,9 +15,9 @@ class InvitesController < ApplicationController
     @invite = @trip.invites.build(created_by: current_user)
 
     if @invite.save
-      redirect_to @trip, notice: "Invite link created successfully!"
+      redirect_to trip_invites_path(@trip), notice: "Invite link created successfully!"
     else
-      redirect_to @trip, alert: "Failed to create invite link: #{@invite.errors.full_messages.join(', ')}"
+      redirect_to trip_invites_path(@trip), alert: "Failed to create invite link: #{@invite.errors.full_messages.join(', ')}"
     end
   end
 
@@ -25,7 +25,7 @@ class InvitesController < ApplicationController
     authorize @trip, :update? # Only trip owners can revoke invites
 
     @invite.revoke!
-    redirect_to @trip, notice: "Invite link revoked successfully."
+    redirect_to trip_invites_path(@trip), notice: "Invite link revoked successfully."
   end
 
   def accept

@@ -32,10 +32,10 @@ class LinksController < ApplicationController
 
     respond_to do |format|
       if @link.save
-        format.html { redirect_to @trip, notice: "Link was successfully created." }
+        format.html { redirect_to trip_links_path(@trip), notice: "Link was successfully created." }
         format.json { render :show, status: :created, location: [ @trip, @link ] }
       else
-        format.html { redirect_to @trip, alert: "Error: #{@link.errors.full_messages.join(', ')}" }
+        format.html { redirect_to trip_links_path(@trip), alert: "Error: #{@link.errors.full_messages.join(', ')}" }
         format.json { render json: @link.errors, status: :unprocessable_entity }
       end
     end
@@ -62,7 +62,7 @@ class LinksController < ApplicationController
     @link.destroy!
 
     respond_to do |format|
-      format.html { redirect_to @trip, status: :see_other, notice: "Link was successfully destroyed." }
+      format.html { redirect_to trip_links_path(@trip), status: :see_other, notice: "Link was successfully destroyed." }
       format.json { head :no_content }
     end
   end
