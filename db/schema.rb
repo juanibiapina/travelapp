@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_06_104803) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_08_095729) do
   create_table "invites", force: :cascade do |t|
     t.integer "trip_id", null: false
     t.string "token", null: false
@@ -52,8 +52,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_104803) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
+    t.string "email"
+    t.string "encrypted_password"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -63,6 +63,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_104803) do
     t.string "uid"
     t.string "name"
     t.string "picture"
+    t.boolean "has_account", default: true, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -105,4 +105,57 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "User With No Picture", user2.name
     assert_nil user2.picture
   end
+
+  test "should create user without account" do
+    user = User.new(name: "John Doe", has_account: false)
+    assert user.valid?
+    assert user.save
+    assert_equal "John Doe", user.name
+    assert_equal false, user.has_account?
+    assert_nil user.email
+    assert_nil user.encrypted_password
+  end
+
+  test "should require name for users without account" do
+    user = User.new(has_account: false)
+    assert_not user.valid?
+    assert_includes user.errors[:name], "can't be blank"
+  end
+
+  test "should not require email or password for users without account" do
+    user = User.new(name: "Jane Doe", has_account: false)
+    assert user.valid?
+    assert_nil user.email
+    assert_nil user.encrypted_password
+  end
+
+  test "should require email and password for users with account" do
+    user = User.new(has_account: true)
+    assert_not user.valid?
+    assert_includes user.errors[:email], "can't be blank"
+    assert_includes user.errors[:encrypted_password], "can't be blank"
+  end
+
+  test "should default has_account to true" do
+    user = User.new(email: "test@example.com", password: "password123")
+    assert user.has_account?
+  end
+
+  test "scope with_account should return only users with accounts" do
+    with_account = User.create!(email: "with@example.com", password: "password123")
+    without_account = User.create!(name: "No Account User", has_account: false)
+
+    users_with_account = User.with_account
+    assert_includes users_with_account, with_account
+    assert_not_includes users_with_account, without_account
+  end
+
+  test "scope without_account should return only users without accounts" do
+    with_account = User.create!(email: "with@example.com", password: "password123")
+    without_account = User.create!(name: "No Account User", has_account: false)
+
+    users_without_account = User.without_account
+    assert_includes users_without_account, without_account
+    assert_not_includes users_without_account, with_account
+  end
 end
