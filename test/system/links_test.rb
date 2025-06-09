@@ -39,7 +39,11 @@ class LinksTest < ApplicationSystemTestCase
 
   test "should destroy Link" do
     visit trip_link_url(@trip, @link)
-    click_on "Destroy this link", match: :first
+
+    # Accept the confirmation dialog when clicking destroy
+    accept_confirm do
+      click_on "Destroy this link", match: :first
+    end
 
     assert_text "Link was successfully destroyed"
   end
