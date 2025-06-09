@@ -11,35 +11,35 @@
     </div>
     
     <!-- Navigation Tabs -->
-    <div class="relative" data-controller="responsive-tabs">
+    <div class="relative" id="responsive-tabs-container">
       <div class="flex">
-        <div class="flex space-x-8" data-responsive-tabs-target="visibleContainer">
+        <div class="flex space-x-8" id="visible-tabs-container">
           <%= link_to @trip, 
-                      data: { responsive_tabs_target: "tab" },
-                      class: "#{current_page?(@trip) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center" do %>
+                      data: { tab: "true" },
+                      class: "#{current_page?(@trip) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center tab-item" do %>
             <%= heroicon "archive-box", options: { class: "w-4 h-4 mr-2" } %>
             Overview
           <% end %>
           
           <%= link_to trip_links_path(@trip), 
-                      data: { responsive_tabs_target: "tab" },
-                      class: "#{current_page?(trip_links_path(@trip)) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center" do %>
+                      data: { tab: "true" },
+                      class: "#{current_page?(trip_links_path(@trip)) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center tab-item" do %>
             <%= heroicon "link", options: { class: "w-4 h-4 mr-2" } %>
             Links
             <span class="ml-1 bg-gray-200 text-gray-900 rounded-full px-2 py-1 text-xs font-medium"><%= @trip.links.count %></span>
           <% end %>
           
           <%= link_to trip_invites_path(@trip), 
-                      data: { responsive_tabs_target: "tab" },
-                      class: "#{current_page?(trip_invites_path(@trip)) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center" do %>
+                      data: { tab: "true" },
+                      class: "#{current_page?(trip_invites_path(@trip)) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center tab-item" do %>
             <%= heroicon "plus", options: { class: "w-4 h-4 mr-2" } %>
             Invitations
             <span class="ml-1 bg-gray-200 text-gray-900 rounded-full px-2 py-1 text-xs font-medium"><%= @trip.invites.valid_invites.count %></span>
           <% end %>
           
           <%= link_to members_trip_path(@trip), 
-                      data: { responsive_tabs_target: "tab" },
-                      class: "#{current_page?(members_trip_path(@trip)) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center" do %>
+                      data: { tab: "true" },
+                      class: "#{current_page?(members_trip_path(@trip)) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center tab-item" do %>
             <%= heroicon "users", options: { class: "w-4 h-4 mr-2" } %>
             Members
             <span class="ml-1 bg-gray-200 text-gray-900 rounded-full px-2 py-1 text-xs font-medium"><%= @trip.trip_memberships.count %></span>
@@ -47,20 +47,164 @@
         </div>
         
         <!-- Overflow Menu -->
-        <div class="relative ml-auto hidden" data-responsive-tabs-target="overflowMenu">
+        <div class="relative ml-auto hidden" id="overflow-menu">
           <button type="button" 
-                  data-responsive-tabs-target="overflowButton"
-                  data-action="click->responsive-tabs#toggleOverflow"
+                  id="overflow-button"
                   class="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm flex items-center">
             <%= heroicon "ellipsis-horizontal", options: { class: "w-4 h-4" } %>
           </button>
           
           <div class="absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-10"
-               data-responsive-tabs-target="overflowList"
-               data-action="click->responsive-tabs#preventClose click@window->responsive-tabs#hideOverflow">
+               id="overflow-list">
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  (function() {
+    const container = document.getElementById('responsive-tabs-container');
+    const visibleContainer = document.getElementById('visible-tabs-container');
+    const overflowMenu = document.getElementById('overflow-menu');
+    const overflowButton = document.getElementById('overflow-button');
+    const overflowList = document.getElementById('overflow-list');
+    
+    if (!container || !visibleContainer || !overflowMenu || !overflowButton || !overflowList) {
+      return;
+    }
+    
+    const tabs = Array.from(visibleContainer.querySelectorAll('.tab-item'));
+    
+    function throttle(func, delay) {
+      let timeoutId;
+      return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func(...args), delay);
+      };
+    }
+    
+    function checkOverflow() {
+      const parentContainer = visibleContainer.parentElement;
+      const containerWidth = parentContainer.offsetWidth;
+      const overflowButtonWidth = 48;
+      
+      // First, make all tabs visible to measure their true widths
+      tabs.forEach(tab => {
+        tab.classList.remove('hidden');
+        tab.style.display = '';
+      });
+      
+      // Calculate total width needed for all tabs
+      let totalTabsWidth = 0;
+      const tabWidths = [];
+      
+      tabs.forEach(tab => {
+        const tabWidth = tab.offsetWidth;
+        tabWidths.push(tabWidth);
+        totalTabsWidth += tabWidth;
+      });
+      
+      // Add spacing between tabs (space-x-8 = 32px between each tab)
+      const totalSpacing = Math.max(0, (tabs.length - 1) * 32);
+      const totalNeededWidth = totalTabsWidth + totalSpacing;
+      
+      // Check if we need overflow menu
+      if (totalNeededWidth <= containerWidth) {
+        // All tabs fit, hide overflow menu
+        overflowMenu.classList.add('hidden');
+        return;
+      }
+      
+      // Calculate available width when overflow button is visible
+      const availableWidth = containerWidth - overflowButtonWidth;
+      
+      // Determine which tabs can fit
+      let currentWidth = 0;
+      let visibleTabs = [];
+      let overflowTabs = [];
+      
+      for (let i = 0; i < tabs.length; i++) {
+        const tabWidth = tabWidths[i] + (i > 0 ? 32 : 0);
+        
+        if (currentWidth + tabWidth <= availableWidth && visibleTabs.length < tabs.length - 1) {
+          currentWidth += tabWidth;
+          visibleTabs.push(tabs[i]);
+        } else {
+          overflowTabs.push(tabs[i]);
+        }
+      }
+      
+      // Ensure at least one tab is visible
+      if (visibleTabs.length === 0 && tabs.length > 0) {
+        visibleTabs.push(tabs[0]);
+        overflowTabs = tabs.slice(1);
+      }
+      
+      updateTabVisibility(visibleTabs, overflowTabs);
+    }
+    
+    function updateTabVisibility(visibleTabs, overflowTabs) {
+      // Show/hide tabs in main container
+      tabs.forEach(tab => {
+        if (visibleTabs.includes(tab)) {
+          tab.classList.remove('hidden');
+          tab.style.display = '';
+        } else {
+          tab.classList.add('hidden');
+          tab.style.display = 'none';
+        }
+      });
+      
+      // Update overflow menu
+      overflowList.innerHTML = '';
+      
+      if (overflowTabs.length > 0) {
+        overflowMenu.classList.remove('hidden');
+        
+        overflowTabs.forEach(tab => {
+          const menuItem = createOverflowMenuItem(tab);
+          overflowList.appendChild(menuItem);
+        });
+      } else {
+        overflowMenu.classList.add('hidden');
+      }
+    }
+    
+    function createOverflowMenuItem(tab) {
+      const link = tab.cloneNode(true);
+      link.classList.remove('border-b-2', 'py-4', 'px-1', 'hidden');
+      link.classList.add('block', 'px-4', 'py-2', 'text-sm', 'hover:bg-gray-100');
+      link.style.display = 'block';
+      return link;
+    }
+    
+    function toggleOverflow() {
+      overflowList.classList.toggle('hidden');
+    }
+    
+    function hideOverflow() {
+      overflowList.classList.add('hidden');
+    }
+    
+    // Event listeners
+    overflowButton.addEventListener('click', toggleOverflow);
+    overflowList.addEventListener('click', function(e) { e.stopPropagation(); });
+    window.addEventListener('click', hideOverflow);
+    
+    // Throttled resize handler
+    const throttledCheckOverflow = throttle(checkOverflow, 100);
+    
+    // Set up observers
+    if (window.ResizeObserver) {
+      const resizeObserver = new ResizeObserver(throttledCheckOverflow);
+      resizeObserver.observe(container);
+    }
+    
+    window.addEventListener('resize', throttledCheckOverflow);
+    
+    // Initial check
+    requestAnimationFrame(checkOverflow);
+  })();
+</script>
