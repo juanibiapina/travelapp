@@ -26,10 +26,14 @@ class AuthenticationTest < ApplicationSystemTestCase
     assert page.has_selector?("h1", text: "Your Trips"), "Should be on trips page with 'Your Trips' heading"
 
     # Step 2: Sign out
+    # Open the user dropdown menu first
+    find("button[aria-label='User menu']").click
     click_on "Sign out"
 
-    # After sign out, user should be redirected and no longer see the sign out link
-    assert_not (page.has_link?("Sign out") || page.has_button?("Sign out")), "Sign out link should not be visible after signing out"
+    # After sign out, user should be redirected and no longer see the user menu
+    # Wait for the page to load after sign out
+    sleep(0.5)
+    assert_not page.has_selector?("button[aria-label='User menu']"), "User menu should not be visible after signing out"
 
     # Step 3: Sign in again with the same credentials
     visit new_account_session_path  # Go to sign in page
@@ -39,6 +43,6 @@ class AuthenticationTest < ApplicationSystemTestCase
 
     # Should be redirected back to trips index after successful sign in
     assert page.has_selector?("h1", text: "Your Trips"), "Should be back on trips page after sign in"
-    assert (page.has_link?("Sign out") || page.has_button?("Sign out")), "Sign out link should be visible after signing in"
+    assert page.has_selector?("button[aria-label='User menu']"), "User menu should be visible after signing in"
   end
 end

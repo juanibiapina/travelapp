@@ -1,4 +1,4 @@
-<% if current_user %>
+<% if user_signed_in? && current_user %>
   <div class="relative" data-controller="dropdown">
     <button type="button"
             class="flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
