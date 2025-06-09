@@ -46,14 +46,7 @@ class Account < ApplicationRecord
   def create_user_if_needed
     return if user.present? # Skip if user is already assigned (e.g., OAuth)
 
-    # Use provided name from form, or extract from email as fallback
-    user_name = if name.present?
-                  name
-    elsif email.present?
-                  email.split("@").first.titleize
-    else
-                  "User"
-    end
-    self.user = User.create!(name: user_name)
+    # Since name is required, we expect it to be present
+    self.user = User.create!(name: name)
   end
 end
