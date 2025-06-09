@@ -5,9 +5,11 @@ export default class extends Controller {
   static targets = ["tab", "visibleContainer", "overflowMenu", "overflowButton", "overflowList"]
 
   connect() {
-    console.log("ResponsiveTabsController connected")
     this.setupObserver()
-    this.checkOverflow()
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      this.checkOverflow()
+    })
   }
 
   disconnect() {
@@ -20,93 +22,99 @@ export default class extends Controller {
   }
 
   setupObserver() {
+    // Throttle overflow check to avoid excessive calls
+    this.throttledCheckOverflow = this.throttle(this.checkOverflow.bind(this), 100)
+    
     // Use ResizeObserver to detect when the container size changes
     this.resizeObserver = new ResizeObserver(() => {
-      console.log("ResizeObserver triggered")
-      this.checkOverflow()
+      this.throttledCheckOverflow()
     })
     
     this.resizeObserver.observe(this.element)
     
     // Also listen to window resize events as a fallback
     this.windowResizeHandler = () => {
-      console.log("Window resize triggered")
-      this.checkOverflow()
+      this.throttledCheckOverflow()
     }
     
     window.addEventListener('resize', this.windowResizeHandler)
   }
 
+  throttle(func, delay) {
+    let timeoutId
+    return (...args) => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => func(...args), delay)
+    }
+  }
+
   checkOverflow() {
-    console.log("Checking overflow...")
     if (!this.hasVisibleContainerTarget || !this.hasOverflowButtonTarget) {
-      console.log("Missing targets")
       return
     }
 
-    const containerWidth = this.visibleContainerTarget.offsetWidth
+    // Get parent container width (the flex container that holds both visible tabs and overflow menu)
+    const parentContainer = this.visibleContainerTarget.parentElement
+    const containerWidth = parentContainer.offsetWidth
     const overflowButtonWidth = 48 // Fixed width estimate for the overflow button
     
-    console.log("Container width:", containerWidth)
-    
     // First, make all tabs visible to measure their true widths
-    this.tabTargets.forEach(tab => tab.classList.remove('hidden'))
-    
-    // Calculate total width needed for all tabs
-    let totalTabsWidth = 0
-    const tabWidths = []
-    
     this.tabTargets.forEach(tab => {
-      const tabWidth = tab.offsetWidth
-      tabWidths.push(tabWidth)
-      totalTabsWidth += tabWidth
+      tab.classList.remove('hidden')
+      tab.style.display = ''
     })
     
-    // Add spacing between tabs (space-x-8 = 32px between each tab)
-    const totalSpacing = Math.max(0, (this.tabTargets.length - 1) * 32)
-    const totalNeededWidth = totalTabsWidth + totalSpacing
-    
-    console.log("Total needed width:", totalNeededWidth, "Available width:", containerWidth)
-    
-    // Check if we need overflow menu
-    if (totalNeededWidth <= containerWidth) {
-      console.log("All tabs fit, hiding overflow menu")
-      // All tabs fit, hide overflow menu
-      this.overflowMenuTarget.classList.add('hidden')
-      return
-    }
-    
-    console.log("Tabs overflow, showing overflow menu")
-    
-    // Calculate available width when overflow button is visible
-    const availableWidth = containerWidth - overflowButtonWidth
-    
-    // Determine which tabs can fit
-    let currentWidth = 0
-    let visibleTabs = []
-    let overflowTabs = []
-    
-    for (let i = 0; i < this.tabTargets.length; i++) {
-      const tabWidth = tabWidths[i] + (i > 0 ? 32 : 0) // Add spacing for all but first tab
+    // Wait for layout to update before measuring
+    requestAnimationFrame(() => {
+      // Calculate total width needed for all tabs
+      let totalTabsWidth = 0
+      const tabWidths = []
       
-      if (currentWidth + tabWidth <= availableWidth && visibleTabs.length < this.tabTargets.length - 1) {
-        // Always keep at least one tab for overflow
-        currentWidth += tabWidth
-        visibleTabs.push(this.tabTargets[i])
-      } else {
-        overflowTabs.push(this.tabTargets[i])
+      this.tabTargets.forEach(tab => {
+        const tabWidth = tab.offsetWidth
+        tabWidths.push(tabWidth)
+        totalTabsWidth += tabWidth
+      })
+      
+      // Add spacing between tabs (space-x-8 = 32px between each tab)
+      const totalSpacing = Math.max(0, (this.tabTargets.length - 1) * 32)
+      const totalNeededWidth = totalTabsWidth + totalSpacing
+      
+      // Check if we need overflow menu
+      if (totalNeededWidth <= containerWidth) {
+        // All tabs fit, hide overflow menu
+        this.overflowMenuTarget.classList.add('hidden')
+        return
       }
-    }
-    
-    // Ensure at least one tab is visible
-    if (visibleTabs.length === 0 && this.tabTargets.length > 0) {
-      visibleTabs.push(this.tabTargets[0])
-      overflowTabs = this.tabTargets.slice(1)
-    }
-    
-    console.log("Visible tabs:", visibleTabs.length, "Overflow tabs:", overflowTabs.length)
-    
-    this.updateTabVisibility(visibleTabs, overflowTabs)
+      
+      // Calculate available width when overflow button is visible
+      const availableWidth = containerWidth - overflowButtonWidth
+      
+      // Determine which tabs can fit
+      let currentWidth = 0
+      let visibleTabs = []
+      let overflowTabs = []
+      
+      for (let i = 0; i < this.tabTargets.length; i++) {
+        const tabWidth = tabWidths[i] + (i > 0 ? 32 : 0) // Add spacing for all but first tab
+        
+        if (currentWidth + tabWidth <= availableWidth && visibleTabs.length < this.tabTargets.length - 1) {
+          // Always keep at least one tab for overflow
+          currentWidth += tabWidth
+          visibleTabs.push(this.tabTargets[i])
+        } else {
+          overflowTabs.push(this.tabTargets[i])
+        }
+      }
+      
+      // Ensure at least one tab is visible
+      if (visibleTabs.length === 0 && this.tabTargets.length > 0) {
+        visibleTabs.push(this.tabTargets[0])
+        overflowTabs = this.tabTargets.slice(1)
+      }
+      
+      this.updateTabVisibility(visibleTabs, overflowTabs)
+    })
   }
 
   updateTabVisibility(visibleTabs, overflowTabs) {
@@ -114,8 +122,10 @@ export default class extends Controller {
     this.tabTargets.forEach(tab => {
       if (visibleTabs.includes(tab)) {
         tab.classList.remove('hidden')
+        tab.style.display = ''
       } else {
         tab.classList.add('hidden')
+        tab.style.display = 'none'
       }
     })
     
@@ -138,6 +148,7 @@ export default class extends Controller {
     const link = tab.cloneNode(true)
     link.classList.remove('border-b-2', 'py-4', 'px-1', 'hidden')
     link.classList.add('block', 'px-4', 'py-2', 'text-sm', 'hover:bg-gray-100')
+    link.style.display = 'block'
     return link
   }
 
