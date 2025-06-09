@@ -1,6 +1,34 @@
-<nav class="flex flex-wrap gap-4 sm:gap-8" aria-label="Trip navigation">
-  <%= tab_link(@trip, "archive-box", "Overview") %>
-  <%= tab_link(trip_links_path(@trip), "link", "Links", @trip.links.count) %>
-  <%= tab_link(trip_invites_path(@trip), "plus", "Invitations", @trip.invites.valid_invites.count) %>
-  <%= tab_link(members_trip_path(@trip), "users", "Members", @trip.trip_memberships.count) %>
-</nav>
+<div class="relative" 
+     data-controller="responsive-tabs" 
+     data-action="click@window->responsive-tabs#hideOverflowMenu">
+  <nav class="flex items-center" aria-label="Trip navigation">
+    <div class="flex gap-4 sm:gap-8 overflow-hidden" 
+         data-responsive-tabs-target="container">
+      <%= tab_link(@trip, "archive-box", "Overview", nil, "responsive-tabs") %>
+      <%= tab_link(trip_links_path(@trip), "link", "Links", @trip.links.count, "responsive-tabs") %>
+      <%= tab_link(trip_invites_path(@trip), "plus", "Invitations", @trip.invites.valid_invites.count, "responsive-tabs") %>
+      <%= tab_link(members_trip_path(@trip), "users", "Members", @trip.trip_memberships.count, "responsive-tabs") %>
+    </div>
+    
+    <!-- Overflow menu button -->
+    <div class="relative ml-4">
+      <button type="button"
+              class="hidden whitespace-nowrap py-4 px-3 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm flex items-center"
+              data-responsive-tabs-target="overflowButton"
+              data-action="click->responsive-tabs#toggleOverflowMenu"
+              aria-label="More tabs">
+        <%= heroicon "ellipsis-horizontal", options: { class: "w-4 h-4", "aria-hidden": "true" } %>
+      </button>
+      
+      <!-- Overflow menu dropdown -->
+      <div class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+           data-responsive-tabs-target="overflowMenu"
+           role="menu"
+           aria-orientation="vertical">
+        <div class="py-1" role="none">
+          <!-- Overflow tabs will be moved here by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
