@@ -7,9 +7,7 @@
       <p class="mt-2 text-lg text-gray-600">Organize and manage all your travel adventures</p>
     </div>
     <%= link_to new_trip_path, class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" do %>
-      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-      </svg>
+      <%= heroicon "plus", options: { class: "w-5 h-5 mr-2" } %>
       New Trip
     <% end %>
   </div>
@@ -26,9 +24,7 @@
                   <%= trip.name %>
                 </h3>
                 <div class="mt-2 flex items-center text-sm text-blue-700 bg-blue-100 rounded-md px-2 py-1 w-fit">
-                  <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                  </svg>
+                  <%= heroicon "calendar-days", options: { class: "w-4 h-4 mr-1.5" } %>
                   <span class="font-medium">
                     <%= trip.start_date.strftime("%b %d") %>
                     <% unless trip.start_date == trip.end_date %>
@@ -44,9 +40,7 @@
               </div>
               <div class="flex-shrink-0 ml-4">
                 <div class="w-12 h-12 bg-white rounded-lg shadow-sm flex items-center justify-center group-hover:bg-blue-50 transition-colors duration-200">
-                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
-                  </svg>
+                  <%= heroicon "wifi", options: { class: "w-6 h-6 text-blue-600" } %>
                 </div>
               </div>
             </div>
@@ -56,15 +50,11 @@
           <div class="p-6">
             <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
               <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-                </svg>
+                <%= heroicon "users", options: { class: "w-4 h-4 mr-1.5 text-blue-500" } %>
                 <span class="font-medium"><%= pluralize(trip.trip_memberships.count, 'member') %></span>
               </div>
               <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                </svg>
+                <%= heroicon "link", options: { class: "w-4 h-4 mr-1.5 text-purple-500" } %>
                 <span class="font-medium"><%= pluralize(trip.links.count, 'link') %></span>
               </div>
             </div>
@@ -78,9 +68,7 @@
                     <img src="<%= owner.picture %>" alt="<%= owner.name || owner.email %>" class="w-8 h-8 rounded-full object-cover">
                   <% else %>
                     <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                      </svg>
+                      <%= heroicon "user", options: { class: "w-4 h-4 text-blue-600" } %>
                     </div>
                   <% end %>
                 </div>
@@ -96,9 +84,7 @@
             <!-- Action Button -->
             <%= link_to trip, class: "w-full inline-flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-blue-50 border border-gray-300 hover:border-blue-300 text-gray-700 hover:text-blue-700 font-medium rounded-lg transition-all duration-200 group-hover:bg-blue-50 group-hover:border-blue-300 group-hover:text-blue-700" do %>
               <span>View Trip</span>
-              <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-              </svg>
+              <%= heroicon "chevron-right", options: { class: "w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" } %>
             <% end %>
           </div>
         </div>
@@ -108,18 +94,14 @@
     <!-- Empty State -->
     <div class="text-center py-16">
       <div class="mx-auto h-24 w-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-        <svg class="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
-        </svg>
+        <%= heroicon "wifi", options: { class: "h-12 w-12 text-gray-400" } %>
       </div>
       <h3 class="text-xl font-semibold text-gray-900 mb-2">No trips yet</h3>
       <p class="text-gray-600 mb-6 max-w-md mx-auto">
         Start planning your next adventure! Create your first trip to organize travel links, collaborate with friends, and keep everything in one place.
       </p>
       <%= link_to new_trip_path, class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition duration-200" do %>
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-        </svg>
+        <%= heroicon "plus", options: { class: "w-5 h-5 mr-2" } %>
         Create Your First Trip
       <% end %>
     </div>

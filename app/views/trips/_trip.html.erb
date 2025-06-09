@@ -6,9 +6,7 @@
       <!-- Trip dates prominently displayed -->
       <div class="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
         <div class="flex items-center text-blue-800">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
+          <%= heroicon "calendar-days", options: { class: "w-5 h-5 mr-2" } %>
           <span class="font-semibold">
             <%= trip.start_date.strftime("%B %d, %Y") %>
             <% unless trip.start_date == trip.end_date %>
@@ -23,21 +21,15 @@
       
       <div class="flex items-center space-x-4 text-sm text-gray-600">
         <div class="flex items-center">
-          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-          </svg>
+          <%= heroicon "users", options: { class: "w-4 h-4 mr-1.5" } %>
           <span><%= pluralize(trip.trip_memberships.count, 'member') %></span>
         </div>
         <div class="flex items-center">
-          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-          </svg>
+          <%= heroicon "link", options: { class: "w-4 h-4 mr-1.5" } %>
           <span><%= pluralize(trip.links.count, 'link') %></span>
         </div>
         <div class="flex items-center">
-          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
+          <%= heroicon "calendar-days", options: { class: "w-4 h-4 mr-1.5" } %>
           <span>Created <%= time_ago_in_words(trip.created_at) %> ago</span>
         </div>
       </div>

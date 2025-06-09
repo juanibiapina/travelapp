@@ -146,6 +146,9 @@ GEM
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashie (5.0.0)
+    heroicons (2.1.1)
+      nokogiri
+      railties (>= 5.2)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.1.0)
@@ -491,6 +494,7 @@ DEPENDENCIES
   debug
   devise
   dockerfile-rails (>= 1.7)
+  heroicons
   importmap-rails
   jbuilder
   kamal
