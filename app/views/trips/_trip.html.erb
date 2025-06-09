@@ -1,0 +1,32 @@
+<div class="space-y-4">
+  <div>
+    <dt class="text-sm font-medium text-gray-500">Trip Name</dt>
+    <dd class="mt-1 text-sm text-gray-900"><%= trip.name %></dd>
+  </div>
+  <% if trip.start_date.present? %>
+    <div>
+      <dt class="text-sm font-medium text-gray-500">Start Date</dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= trip.start_date.strftime("%B %d, %Y") %></dd>
+    </div>
+  <% end %>
+  <% if trip.end_date.present? %>
+    <div>
+      <dt class="text-sm font-medium text-gray-500">End Date</dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= trip.end_date.strftime("%B %d, %Y") %></dd>
+    </div>
+  <% end %>
+</div>
+
+<!-- Actions -->
+<div class="mt-8 flex flex-wrap gap-3">
+  <%= link_to edit_trip_path(trip), class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" do %>
+    <%= heroicon "pencil", options: { class: "w-4 h-4 mr-2" } %>
+    Edit Trip
+  <% end %>
+  <%= button_to [trip], method: :delete,
+                data: { confirm: "Are you sure? This action cannot be undone." },
+                class: "inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" do %>
+    <%= heroicon "trash", options: { class: "w-4 h-4 mr-2" } %>
+    Delete Trip
+  <% end %>
+</div>
