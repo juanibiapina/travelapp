@@ -5,6 +5,7 @@ export default class extends Controller {
   static targets = ["tab", "visibleContainer", "overflowMenu", "overflowButton", "overflowList"]
 
   connect() {
+    console.log("ResponsiveTabsController connected")
     this.setupObserver()
     this.checkOverflow()
   }
@@ -13,24 +14,40 @@ export default class extends Controller {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect()
     }
+    if (this.windowResizeHandler) {
+      window.removeEventListener('resize', this.windowResizeHandler)
+    }
   }
 
   setupObserver() {
     // Use ResizeObserver to detect when the container size changes
     this.resizeObserver = new ResizeObserver(() => {
+      console.log("ResizeObserver triggered")
       this.checkOverflow()
     })
     
     this.resizeObserver.observe(this.element)
+    
+    // Also listen to window resize events as a fallback
+    this.windowResizeHandler = () => {
+      console.log("Window resize triggered")
+      this.checkOverflow()
+    }
+    
+    window.addEventListener('resize', this.windowResizeHandler)
   }
 
   checkOverflow() {
+    console.log("Checking overflow...")
     if (!this.hasVisibleContainerTarget || !this.hasOverflowButtonTarget) {
+      console.log("Missing targets")
       return
     }
 
     const containerWidth = this.visibleContainerTarget.offsetWidth
     const overflowButtonWidth = 48 // Fixed width estimate for the overflow button
+    
+    console.log("Container width:", containerWidth)
     
     // First, make all tabs visible to measure their true widths
     this.tabTargets.forEach(tab => tab.classList.remove('hidden'))
@@ -49,12 +66,17 @@ export default class extends Controller {
     const totalSpacing = Math.max(0, (this.tabTargets.length - 1) * 32)
     const totalNeededWidth = totalTabsWidth + totalSpacing
     
+    console.log("Total needed width:", totalNeededWidth, "Available width:", containerWidth)
+    
     // Check if we need overflow menu
     if (totalNeededWidth <= containerWidth) {
+      console.log("All tabs fit, hiding overflow menu")
       // All tabs fit, hide overflow menu
       this.overflowMenuTarget.classList.add('hidden')
       return
     }
+    
+    console.log("Tabs overflow, showing overflow menu")
     
     // Calculate available width when overflow button is visible
     const availableWidth = containerWidth - overflowButtonWidth
@@ -81,6 +103,8 @@ export default class extends Controller {
       visibleTabs.push(this.tabTargets[0])
       overflowTabs = this.tabTargets.slice(1)
     }
+    
+    console.log("Visible tabs:", visibleTabs.length, "Overflow tabs:", overflowTabs.length)
     
     this.updateTabVisibility(visibleTabs, overflowTabs)
   }

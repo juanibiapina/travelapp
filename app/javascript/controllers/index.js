@@ -2,4 +2,7 @@
 // Run that command whenever you add a new controller or create them with
 // ./bin/rails generate stimulus controllerName
 
-// No controllers to register yet
+import { application } from "./application"
+
+import ResponsiveTabsController from "./responsive_tabs_controller"
+application.register("responsive-tabs", ResponsiveTabsController)
