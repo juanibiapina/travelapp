@@ -1,43 +1,21 @@
 <div class="bg-gray-50 border-b border-gray-200">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Trip Title -->
+    <%# Trip Title %>
     <div class="py-6">
       <div class="flex items-center">
-        <%= link_to trips_path, class: "text-blue-600 hover:text-blue-800 mr-2" do %>
-          <%= heroicon "arrow-left", options: { class: "w-4 h-4" } %>
+        <%= link_to trips_path, class: "text-blue-600 hover:text-blue-800 mr-2", "aria-label": "Back to trips" do %>
+          <%= heroicon "arrow-left", options: { class: "w-4 h-4", "aria-hidden": "true" } %>
         <% end %>
         <h1 class="text-2xl font-bold text-gray-900"><%= @trip.name %></h1>
       </div>
     </div>
-    
-    <!-- Navigation Tabs -->
-    <div class="flex space-x-8">
-      <%= link_to @trip, 
-                  class: "#{current_page?(@trip) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center" do %>
-        <%= heroicon "archive-box", options: { class: "w-4 h-4 mr-2" } %>
-        Overview
-      <% end %>
-      
-      <%= link_to trip_links_path(@trip), 
-                  class: "#{current_page?(trip_links_path(@trip)) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center" do %>
-        <%= heroicon "link", options: { class: "w-4 h-4 mr-2" } %>
-        Links
-        <span class="ml-1 bg-gray-200 text-gray-900 rounded-full px-2 py-1 text-xs font-medium"><%= @trip.links.count %></span>
-      <% end %>
-      
-      <%= link_to trip_invites_path(@trip), 
-                  class: "#{current_page?(trip_invites_path(@trip)) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center" do %>
-        <%= heroicon "plus", options: { class: "w-4 h-4 mr-2" } %>
-        Invitations
-        <span class="ml-1 bg-gray-200 text-gray-900 rounded-full px-2 py-1 text-xs font-medium"><%= @trip.invites.valid_invites.count %></span>
-      <% end %>
-      
-      <%= link_to members_trip_path(@trip), 
-                  class: "#{current_page?(members_trip_path(@trip)) ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center" do %>
-        <%= heroicon "users", options: { class: "w-4 h-4 mr-2" } %>
-        Members
-        <span class="ml-1 bg-gray-200 text-gray-900 rounded-full px-2 py-1 text-xs font-medium"><%= @trip.trip_memberships.count %></span>
-      <% end %>
-    </div>
+
+    <%# Navigation Tabs %>
+    <nav class="flex flex-wrap gap-4 sm:gap-8" aria-label="Trip navigation">
+      <%= tab_link(@trip, "archive-box", "Overview") %>
+      <%= tab_link(trip_links_path(@trip), "link", "Links", @trip.links.count) %>
+      <%= tab_link(trip_invites_path(@trip), "plus", "Invitations", @trip.invites.valid_invites.count) %>
+      <%= tab_link(members_trip_path(@trip), "users", "Members", @trip.trip_memberships.count) %>
+    </nav>
   </div>
 </div>
