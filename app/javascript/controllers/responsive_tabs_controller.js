@@ -118,10 +118,18 @@ export default class extends Controller {
   }
 
   toggleOverflow() {
-    this.overflowListTarget.classList.toggle('hidden')
+    if (this.hasOverflowListTarget) {
+      this.overflowListTarget.classList.toggle('hidden')
+    }
   }
 
   hideOverflow() {
-    this.overflowListTarget.classList.add('hidden')
+    if (this.hasOverflowListTarget) {
+      this.overflowListTarget.classList.add('hidden')
+    }
+  }
+
+  preventClose(event) {
+    event.stopPropagation()
   }
 }
