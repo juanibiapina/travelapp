@@ -7,6 +7,8 @@ class Account < ApplicationRecord
 
   belongs_to :user
 
+  attr_accessor :name
+
   before_validation :create_user_if_needed, on: :create
 
   def self.from_omniauth(auth)
@@ -44,8 +46,14 @@ class Account < ApplicationRecord
   def create_user_if_needed
     return if user.present? # Skip if user is already assigned (e.g., OAuth)
 
-    # Extract name from email for regular registration
-    name = email.present? ? email.split("@").first.titleize : "User"
-    self.user = User.create!(name: name)
+    # Use provided name from form, or extract from email as fallback
+    user_name = if name.present?
+                  name
+    elsif email.present?
+                  email.split("@").first.titleize
+    else
+                  "User"
+    end
+    self.user = User.create!(name: user_name)
   end
 end
