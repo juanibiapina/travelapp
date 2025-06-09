@@ -18,7 +18,10 @@ class DrawerTest < ApplicationSystemTestCase
 
     # Close the drawer with the close button
     find('button[aria-label="Close menu"]').click
-    assert_no_selector 'aside[data-drawer-target="panel"]', visible: true
-    assert_no_selector 'div[data-drawer-target="overlay"]', visible: true
+
+    # Wait for the CSS transition to complete and the drawer to be fully closed
+    # The panel should have both 'hidden' class and '-translate-x-full' class when fully closed
+    assert_selector 'aside[data-drawer-target="panel"].hidden', visible: false, wait: 2
+    assert_no_selector 'div[data-drawer-target="overlay"]', visible: true, wait: 2
   end
 end
