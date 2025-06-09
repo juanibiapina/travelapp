@@ -1,6 +1,7 @@
 <% content_for :title, "Invitations" %>
-
-<%= render "trips/header_with_tabs" %>
+<% content_for :header do %>
+  <%= render "trips/header_with_tabs" %>
+<% end %>
 
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <div class="bg-white rounded-lg shadow">
