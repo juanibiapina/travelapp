@@ -1,49 +1,20 @@
-<div data-controller="drawer">
-  <div class="bg-gray-50 border-b border-gray-200">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <%# Trip Title %>
-      <div class="py-6">
-        <div class="flex items-center">
-          <button type="button"
-                  class="flex items-center justify-center w-10 h-10 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 mr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  aria-label="Open menu"
-                  data-action="click->drawer#open">
-            <%= heroicon "bars-3", options: { class: "w-5 h-5 text-gray-700", "aria-hidden": "true" } %>
-          </button>
-          <h1 class="text-2xl font-bold text-gray-900"><%= @trip.name %></h1>
-        </div>
+<div class="bg-gray-50 border-b border-gray-200">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <%# Trip Title %>
+    <div class="py-6">
+      <div class="flex items-center">
+        <button type="button"
+                class="flex items-center justify-center w-10 h-10 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 mr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Open menu"
+                onclick="window.dispatchEvent(new CustomEvent('drawer:open'))">
+          <%= heroicon "bars-3", options: { class: "w-5 h-5 text-gray-700", "aria-hidden": "true" } %>
+        </button>
+        <h1 class="text-2xl font-bold text-gray-900"><%= @trip.name %></h1>
       </div>
-
-      <%# Navigation Tabs %>
-      <nav class="flex flex-wrap gap-4 sm:gap-8" aria-label="Trip navigation">
-        <%= tab_link(@trip, "archive-box", "Overview") %>
-        <%= tab_link(trip_links_path(@trip), "link", "Links", @trip.links.count) %>
-        <%= tab_link(trip_invites_path(@trip), "plus", "Invitations", @trip.invites.valid_invites.count) %>
-        <%= tab_link(members_trip_path(@trip), "users", "Members", @trip.trip_memberships.count) %>
-      </nav>
     </div>
+
+    <%= render "trips/navigation_tabs" %>
   </div>
-
-  <!-- Overlay -->
-  <div data-drawer-target="overlay"
-       data-action="click->drawer#overlayClick"
-       class="fixed inset-0 bg-black/30 z-40 hidden transition-opacity"></div>
-
-  <!-- Drawer Panel -->
-  <aside data-drawer-target="panel"
-         class="fixed top-0 left-0 z-50 w-72 h-full bg-white shadow-xl rounded-r-2xl transform -translate-x-full transition-transform duration-300 flex flex-col hidden"
-         tabindex="-1">
-    <div class="flex justify-end p-4">
-      <button type="button"
-              data-drawer-target="closeButton"
-              class="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="Close menu"
-              data-action="click->drawer#close">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-      </button>
-    </div>
-    <nav class="flex flex-col gap-2 px-6">
-      <%= link_to "Trips", trips_path, class: "flex items-center gap-3 text-gray-900 text-base font-medium rounded-lg px-3 py-2 hover:bg-gray-100 transition" %>
-    </nav>
-  </aside>
 </div>
+
+<%= render "shared/drawer" %>

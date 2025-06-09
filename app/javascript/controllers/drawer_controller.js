@@ -6,10 +6,20 @@ export default class extends Controller {
   connect() {
     this.handleKeydown = this.handleKeydown.bind(this)
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this)
+    this.handleDrawerOpen = this.handleDrawerOpen.bind(this)
     // Always hide panel and overlay on connect
     this.panelTarget.classList.add("hidden", "-translate-x-full")
     this.panelTarget.classList.remove("translate-x-0")
     this.overlayTarget.classList.add("hidden")
+    window.addEventListener("drawer:open", this.handleDrawerOpen)
+  }
+
+  disconnect() {
+    window.removeEventListener("drawer:open", this.handleDrawerOpen)
+  }
+
+  handleDrawerOpen() {
+    this.open()
   }
 
   open() {
@@ -20,7 +30,6 @@ export default class extends Controller {
     this.overlayTarget.classList.remove("hidden")
     document.body.classList.add("overflow-hidden")
     document.addEventListener("keydown", this.handleKeydown)
-    this.closeButtonTarget.focus()
   }
 
   close() {
@@ -47,4 +56,4 @@ export default class extends Controller {
       this.close()
     }
   }
-} 
+}
