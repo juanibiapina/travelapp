@@ -41,6 +41,9 @@ gem "omniauth-rails_csrf_protection"
 gem "tailwindcss-ruby", "~> 4.1"
 gem "tailwindcss-rails", "~> 4.2"
 
+# Icons
+gem "heroicons"
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
