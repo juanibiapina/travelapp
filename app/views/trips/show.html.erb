@@ -4,128 +4,45 @@
 <% end %>
 
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    <!-- Main content -->
-    <div class="lg:col-span-2">
-      <div class="bg-white rounded-lg shadow">
-        <div class="px-4 py-5 sm:p-6">
-          <div class="mb-6">
-            <h2 class="text-lg font-medium text-gray-900">Trip Overview</h2>
-            <p class="mt-1 text-sm text-gray-600">General information about your trip</p>
-          </div>
-          
-          <!-- Trip Details -->
-          <div class="space-y-4">
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Trip Name</dt>
-              <dd class="mt-1 text-sm text-gray-900"><%= @trip.name %></dd>
-            </div>
-            <% if @trip.start_date.present? %>
-              <div>
-                <dt class="text-sm font-medium text-gray-500">Start Date</dt>
-                <dd class="mt-1 text-sm text-gray-900"><%= @trip.start_date.strftime("%B %d, %Y") %></dd>
-              </div>
-            <% end %>
-            <% if @trip.end_date.present? %>
-              <div>
-                <dt class="text-sm font-medium text-gray-500">End Date</dt>
-                <dd class="mt-1 text-sm text-gray-900"><%= @trip.end_date.strftime("%B %d, %Y") %></dd>
-              </div>
-            <% end %>
-          </div>
-          
-          <!-- Actions -->
-          <div class="mt-8 flex flex-wrap gap-3">
-            <%= link_to edit_trip_path(@trip), class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" do %>
-              <%= heroicon "pencil", options: { class: "w-4 h-4 mr-2" } %>
-              Edit Trip
-            <% end %>
-            <%= button_to [@trip], method: :delete, 
-                          data: { confirm: "Are you sure? This action cannot be undone." },
-                          class: "inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" do %>
-              <%= heroicon "trash", options: { class: "w-4 h-4 mr-2" } %>
-              Delete Trip
-            <% end %>
-          </div>
-        </div>
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-4 py-5 sm:p-6">
+      <div class="mb-6">
+        <h2 class="text-lg font-medium text-gray-900">Trip Overview</h2>
+        <p class="mt-1 text-sm text-gray-600">General information about your trip</p>
       </div>
-    </div>
-    
-    <!-- Sidebar -->
-    <div class="lg:col-span-1">
-      <!-- Quick Stats -->
-      <div class="bg-white rounded-lg shadow mb-6">
-        <div class="px-4 py-5 sm:p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Stats</h3>
-          <div class="grid grid-cols-1 gap-4">
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <%= heroicon "users", options: { class: "w-4 h-4 text-blue-600" } %>
-                </div>
-              </div>
-              <div class="ml-3">
-                <p class="text-sm font-medium text-gray-900"><%= pluralize(@trip.trip_memberships.count, 'member') %></p>
-                <p class="text-sm text-gray-500">Trip members</p>
-              </div>
-            </div>
-            
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <%= heroicon "link", options: { class: "w-4 h-4 text-purple-600" } %>
-                </div>
-              </div>
-              <div class="ml-3">
-                <p class="text-sm font-medium text-gray-900"><%= pluralize(@trip.links.count, 'link') %></p>
-                <p class="text-sm text-gray-500">Useful links</p>
-              </div>
-            </div>
-            
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <%= heroicon "plus", options: { class: "w-4 h-4 text-green-600" } %>
-                </div>
-              </div>
-              <div class="ml-3">
-                <p class="text-sm font-medium text-gray-900"><%= pluralize(@trip.invites.valid_invites.count, 'active invitation') %></p>
-                <p class="text-sm text-gray-500">Pending invites</p>
-              </div>
-            </div>
-          </div>
+
+      <!-- Trip Details -->
+      <div class="space-y-4">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Trip Name</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @trip.name %></dd>
         </div>
+        <% if @trip.start_date.present? %>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Start Date</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @trip.start_date.strftime("%B %d, %Y") %></dd>
+          </div>
+        <% end %>
+        <% if @trip.end_date.present? %>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">End Date</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @trip.end_date.strftime("%B %d, %Y") %></dd>
+          </div>
+        <% end %>
       </div>
-      
-      <!-- Recent Members -->
-      <div class="bg-white rounded-lg shadow">
-        <div class="px-4 py-5 sm:p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-medium text-gray-900">Recent Members</h3>
-            <%= link_to "View all", members_trip_path(@trip), class: "text-sm text-blue-600 hover:text-blue-800" %>
-          </div>
-          <div class="space-y-3">
-            <% @trip.trip_memberships.includes(:user).limit(3).each do |membership| %>
-              <div class="flex items-center">
-                <div class="flex-shrink-0">
-                  <% if membership.user.picture.present? %>
-                    <img src="<%= membership.user.picture %>" alt="<%= membership.user.name || membership.user.account&.email %>" class="w-8 h-8 rounded-full object-cover">
-                  <% else %>
-                    <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      <%= heroicon "user", options: { class: "w-4 h-4 text-gray-600" } %>
-                    </div>
-                  <% end %>
-                </div>
-                <div class="ml-3 flex-1 min-w-0">
-                  <p class="text-sm font-medium text-gray-900 truncate">
-                    <%= membership.user.name.present? ? membership.user.name : membership.user.account&.email %>
-                  </p>
-                  <p class="text-xs text-gray-500"><%= membership.role.titleize %></p>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        </div>
+
+      <!-- Actions -->
+      <div class="mt-8 flex flex-wrap gap-3">
+        <%= link_to edit_trip_path(@trip), class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" do %>
+          <%= heroicon "pencil", options: { class: "w-4 h-4 mr-2" } %>
+          Edit Trip
+        <% end %>
+        <%= button_to [@trip], method: :delete, 
+                      data: { confirm: "Are you sure? This action cannot be undone." },
+                      class: "inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" do %>
+          <%= heroicon "trash", options: { class: "w-4 h-4 mr-2" } %>
+          Delete Trip
+        <% end %>
       </div>
     </div>
   </div>
