@@ -27,12 +27,12 @@ class ResponsiveTabsTest < ApplicationSystemTestCase
 
     # Check that the responsive tabs controller is present
     assert_selector "[data-controller='responsive-tabs']"
-    
+
     # Check that required targets are present
     assert_selector "[data-responsive-tabs-target='container']"
     assert_selector "[data-responsive-tabs-target='overflowButton']", visible: false
     assert_selector "[data-responsive-tabs-target='overflowMenu']", visible: false
-    
+
     # Check tab targets
     assert_selector "[data-responsive-tabs-target='tab']", minimum: 1
   end
