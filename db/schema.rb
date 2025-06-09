@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_08_113649) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_09_210130) do
   create_table "accounts", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "email", default: "", null: false
@@ -49,6 +49,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_113649) do
     t.index ["trip_id"], name: "index_links_on_trip_id"
   end
 
+  create_table "trip_events", force: :cascade do |t|
+    t.string "title", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.integer "trip_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["trip_id"], name: "index_trip_events_on_trip_id"
+  end
+
   create_table "trip_memberships", force: :cascade do |t|
     t.integer "trip_id", null: false
     t.integer "user_id", null: false
@@ -79,6 +89,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_113649) do
   add_foreign_key "invites", "trips"
   add_foreign_key "invites", "users", column: "created_by_id"
   add_foreign_key "links", "trips"
+  add_foreign_key "trip_events", "trips"
   add_foreign_key "trip_memberships", "trips"
   add_foreign_key "trip_memberships", "users"
 end

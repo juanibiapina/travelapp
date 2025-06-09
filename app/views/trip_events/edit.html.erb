@@ -1,0 +1,33 @@
+<% content_for :title, "Editing event" %>
+
+<div class="max-w-2xl mx-auto">
+  <div class="mb-8">
+    <div class="flex items-center mb-4">
+      <div class="flex-shrink-0">
+        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+          <%= heroicon "pencil", options: { class: "w-6 h-6 text-yellow-600" } %>
+        </div>
+      </div>
+      <div class="ml-4">
+        <h1 class="text-3xl font-bold text-gray-900">Edit Event</h1>
+        <p class="mt-1 text-lg text-gray-600">Update your event details</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+    <%= render "form", trip_event: @trip_event %>
+  </div>
+
+  <div class="mt-6 flex items-center space-x-4">
+    <%= link_to [@trip, @trip_event], class: "inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200" do %>
+      <%= heroicon "eye", options: { class: "w-4 h-4 mr-2" } %>
+      View Event
+    <% end %>
+    <span class="text-gray-400">•</span>
+    <%= link_to trip_trip_events_path(@trip), class: "inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200" do %>
+      <%= heroicon "arrow-left", options: { class: "w-4 h-4 mr-2" } %>
+      Back to Events
+    <% end %>
+  </div>
+</div>
