@@ -9,3 +9,4 @@ pin "@hotwired/stimulus", to: "stimulus.min.js"
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 
 pin_all_from "app/javascript/controllers", under: "controllers"
+pin "mapbox-gl" # @3.12.0

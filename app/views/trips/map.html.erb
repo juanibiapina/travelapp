@@ -1,4 +1,7 @@
 <% content_for :title, "#{@trip.name} - Map" %>
+<% content_for :head do %>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css" rel="stylesheet">
+<% end %>
 <% content_for :header do %>
   <%= render "header_with_tabs" %>
 <% end %>
