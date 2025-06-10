@@ -30,14 +30,25 @@
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
       <div>
         <%= form.label :start_date, class: "block text-sm font-medium text-gray-700" %>
-        <%= form.date_field :start_date, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+        <%= form.date_field :start_date, 
+            class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+            min: @trip.start_date,
+            max: @trip.end_date %>
       </div>
 
       <div>
         <%= form.label :end_date, class: "block text-sm font-medium text-gray-700" %>
-        <%= form.date_field :end_date, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+        <%= form.date_field :end_date, 
+            class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+            min: @trip.start_date,
+            max: @trip.end_date %>
       </div>
     </div>
+
+    <p class="text-sm text-gray-600">
+      <%= heroicon "information-circle", options: { class: "w-4 h-4 inline mr-1 text-blue-500" } %>
+      Event dates must be within your trip dates: <%= @trip.start_date.strftime("%B %d") %> - <%= @trip.end_date.strftime("%B %d, %Y") %>
+    </p>
 
     <div class="flex items-center justify-between pt-6 border-t border-gray-200">
       <div>
