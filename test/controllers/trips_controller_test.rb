@@ -118,6 +118,39 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "should get members" do
+    get members_trip_url(@trip)
+    assert_response :success
+    assert_select "h2", "Trip Members"
+  end
+
+  test "should update member starting place" do
+    membership = @trip.trip_memberships.first
+    place = Place.create!(trip: @trip, name: "Airport")
+
+    patch update_member_starting_place_trip_url(@trip), params: {
+      membership_id: membership.id,
+      starting_place_id: place.id
+    }
+
+    assert_redirected_to members_trip_url(@trip)
+    assert_equal place, membership.reload.starting_place
+  end
+
+  test "should clear member starting place" do
+    place = Place.create!(trip: @trip, name: "Airport")
+    membership = @trip.trip_memberships.first
+    membership.update!(starting_place: place)
+
+    patch update_member_starting_place_trip_url(@trip), params: {
+      membership_id: membership.id,
+      starting_place_id: ""
+    }
+
+    assert_redirected_to members_trip_url(@trip)
+    assert_nil membership.reload.starting_place
+  end
+
   private
 
   def create_trip_with_owner(name, user)
