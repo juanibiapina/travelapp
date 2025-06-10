@@ -104,6 +104,20 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "should get timeline" do
+    get timeline_trip_url(@trip)
+    assert_response :success
+    assert_select "h2", "Trip Timeline"
+  end
+
+  test "should not allow access to timeline of trip belonging to another user" do
+    other_user = users(:two)
+    other_trip = create_trip_with_owner("Other User Trip", other_user)
+
+    get timeline_trip_url(other_trip)
+    assert_response :not_found
+  end
+
   private
 
   def create_trip_with_owner(name, user)

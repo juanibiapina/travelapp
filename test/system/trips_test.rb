@@ -41,6 +41,15 @@ class TripsTest < ApplicationSystemTestCase
     visit trips_url
   end
 
+  test "should visit timeline and see timeline view" do
+    visit trip_url(@trip)
+    click_on "Timeline"
+
+    assert_selector "h2", text: "Trip Timeline"
+    assert_selector ".relative.bg-gray-200.rounded-full.h-3" # Timeline bar
+    assert_text "Events for"
+  end
+
   test "should destroy Trip" do
     visit trip_url(@trip)
     click_on "Delete Trip", match: :first
