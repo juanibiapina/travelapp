@@ -37,4 +37,23 @@ class TripMembershipTest < ActiveSupport::TestCase
     assert member.valid?
     assert member.member?
   end
+
+  test "should accept starting place from same trip" do
+    place = Place.create!(trip: @trip, name: "Starting Location")
+    membership = TripMembership.new(trip: @trip, user: @other_user, role: "member", starting_place: place)
+    assert membership.valid?
+  end
+
+  test "should reject starting place from different trip" do
+    other_trip = trips(:two)
+    place = Place.create!(trip: other_trip, name: "Starting Location")
+    membership = TripMembership.new(trip: @trip, user: @other_user, role: "member", starting_place: place)
+    assert_not membership.valid?
+    assert_includes membership.errors[:starting_place], "must belong to the same trip"
+  end
+
+  test "should allow membership without starting place" do
+    membership = TripMembership.new(trip: @trip, user: @other_user, role: "member")
+    assert membership.valid?
+  end
 end

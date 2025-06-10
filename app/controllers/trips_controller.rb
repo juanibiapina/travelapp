@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_action :authenticate_account!
-  before_action :set_trip, only: %i[ show edit update destroy members timeline ]
+  before_action :set_trip, only: %i[ show edit update destroy members timeline update_member_starting_place ]
 
   # GET /trips or /trips.json
   def index
@@ -15,7 +15,8 @@ class TripsController < ApplicationController
   # GET /trips/1/members
   def members
     authorize @trip, :show?
-    @memberships = @trip.trip_memberships.includes(:user)
+    @memberships = @trip.trip_memberships.includes(:user, :starting_place)
+    @places = @trip.places.order(:name)
   end
 
   # GET /trips/1/timeline
@@ -81,6 +82,21 @@ class TripsController < ApplicationController
       format.html { redirect_to trips_path, status: :see_other, notice: "Trip was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  # PATCH /trips/1/update_member_starting_place
+  def update_member_starting_place
+    authorize @trip, :show?
+    membership = @trip.trip_memberships.find(params[:membership_id])
+
+    if params[:starting_place_id].present?
+      place = @trip.places.find(params[:starting_place_id])
+      membership.update!(starting_place: place)
+    else
+      membership.update!(starting_place: nil)
+    end
+
+    redirect_to members_trip_path(@trip), notice: "Starting place updated successfully."
   end
 
   private

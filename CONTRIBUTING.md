@@ -60,6 +60,7 @@ bin/brakeman --no-pager
 - Tracks user roles (owner/member) within trips
 - Ensures one membership per user per trip
 - Enables multi-user trip collaboration
+- Includes optional starting place for each member (where they are at trip start)
 
 **Invite**
 - Belongs to a trip and created by a user
@@ -100,6 +101,7 @@ bin/brakeman --no-pager
 - Generate shareable invite links for easy trip joining
 - Revoke invite links to control access
 - Clean, responsive interface for trip management
+- Set starting places for trip members to track where they begin their journey
 
 **Invite Link System**
 - Trip owners can generate secure invite links from the trip page
@@ -191,7 +193,7 @@ All development commands use the `bin/` prefix for consistency and to ensure the
 The application uses seven main tables:
 - `users` - User accounts with Devise fields and OAuth integration
 - `trips` - Travel plans with multi-user support
-- `trip_memberships` - Join table linking users to trips with roles
+- `trip_memberships` - Join table linking users to trips with roles and optional starting places
 - `invites` - Secure invite tokens for trip sharing
 - `links` - URLs associated with trips
 - `places` - Named locations associated with trips
