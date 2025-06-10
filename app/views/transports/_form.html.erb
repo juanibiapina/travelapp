@@ -1,0 +1,78 @@
+<%= form_with(model: [@trip, transport], local: true, class: "space-y-6") do |form| %>
+  <% if transport.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <%= heroicon "exclamation-triangle", options: { class: "h-5 w-5 text-red-400" } %>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">
+            <%= pluralize(transport.errors.count, "error") %> prohibited this transport from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700">
+            <ul role="list" class="pl-5 space-y-1 list-disc">
+              <% transport.errors.each do |error| %>
+                <li><%= error.full_message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <%= form.text_field :name, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm", placeholder: "e.g. Flight AA123, Train to Paris" %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :origin_place_id, "Origin Place", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.select :origin_place_id, 
+          options_from_collection_for_select(@trip.places, :id, :name, transport.origin_place_id), 
+          { prompt: "Select origin place" }, 
+          { class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" } %>
+    </div>
+    
+    <div>
+      <%= form.label :destination_place_id, "Destination Place", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.select :destination_place_id, 
+          options_from_collection_for_select(@trip.places, :id, :name, transport.destination_place_id), 
+          { prompt: "Select destination place" }, 
+          { class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" } %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :start_date, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.date_field :start_date, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+    </div>
+    
+    <div>
+      <%= form.label :end_date, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.date_field :end_date, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :user_ids, "Who is taking this transport?", class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <div class="space-y-2">
+      <% @trip.members.each do |user| %>
+        <label class="flex items-center">
+          <%= check_box_tag "transport[user_ids][]", user.id, transport.users.include?(user), class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-offset-0 h-4 w-4" %>
+          <span class="ml-2 text-sm text-gray-700"><%= user.account.email %></span>
+        </label>
+      <% end %>
+      <%= hidden_field_tag "transport[user_ids][]", "" %>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end space-x-3 pt-4">
+    <%= link_to trip_transports_path(@trip), class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200" do %>
+      Cancel
+    <% end %>
+    <%= form.submit class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+  </div>
+<% end %>

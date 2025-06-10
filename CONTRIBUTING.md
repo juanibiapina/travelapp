@@ -132,12 +132,13 @@ bin/brakeman --no-pager
 - Nested resource structure (trips have many places)
 - Full CRUD operations with proper authorization
 
-**Event Management**
-- Add events to trips for organizing time-based activities
-- Each event has a title, start date, and end date
-- Chronological ordering and duration calculation
-- Nested resource structure (trips have many trip events)
+**Transport Management**
+- Add transports to trips for organizing transportation between places
+- Each transport has name, start date, end date, origin place, and destination place
+- Support for tracking which users are taking each transport
+- Nested resource structure (trips have many transports)
 - Full CRUD operations with proper authorization
+- Transportation logistics tracking with date and route validation
 
 **User Interface**
 - Responsive design with Tailwind CSS
@@ -183,11 +184,12 @@ bin/brakeman --no-pager
 - Uses Pundit for role-based authorization
 - Ensures users can only access places for trips they belong to
 
-**TripEventsController**
-- Nested CRUD operations under trips for managing trip events
+**TransportsController**
+- Nested CRUD operations under trips for managing transports
 - Requires user authentication
 - Uses Pundit for role-based authorization
-- Ensures users can only access events for trips they belong to
+- Ensures users can only access transports for trips they belong to
+- Supports user assignment for who is taking each transport
 
 ### Development Workflow
 
@@ -201,7 +203,7 @@ All development commands use the `bin/` prefix for consistency and to ensure the
 
 ### Database Schema
 
-The application uses seven main tables:
+The application uses eight main tables:
 - `users` - User accounts with Devise fields and OAuth integration
 - `trips` - Travel plans with multi-user support
 - `trip_memberships` - Join table linking users to trips with roles and optional starting places
@@ -209,6 +211,8 @@ The application uses seven main tables:
 - `links` - URLs associated with trips
 - `places` - Named locations associated with trips
 - `trip_events` - Time-based events and activities associated with trips
+- `transports` - Transportation between places during trips
+- `transport_users` - Join table linking users to transports for tracking who is taking each transport
 
 Foreign key relationships ensure data integrity, and dependent destroys clean up associated records when parent records are deleted.
 
