@@ -72,6 +72,13 @@ bin/brakeman --no-pager
 - Stores URLs related to the trip (hotels, flights, activities, etc.)
 - Validates URL format to ensure proper HTTP/HTTPS URLs
 
+**TripEvent**
+- Belongs to a trip
+- Represents events that happen during a trip (accommodations, train rides, activities, etc.)
+- Has required fields: title, start_date, end_date
+- Validates that end_date is greater than or equal to start_date
+- Enables chronological organization of trip activities
+
 ### Key Features
 
 **Authentication & Authorization**
@@ -99,6 +106,13 @@ bin/brakeman --no-pager
 - Add links to trips for organizing travel-related URLs
 - Nested resource structure (trips have many links)
 - URL validation to ensure valid web addresses
+
+**Event Management**
+- Add events to trips for organizing time-based activities
+- Each event has a title, start date, and end date
+- Chronological ordering and duration calculation
+- Nested resource structure (trips have many trip events)
+- Full CRUD operations with proper authorization
 
 **User Interface**
 - Responsive design with Tailwind CSS
@@ -138,6 +152,12 @@ bin/brakeman --no-pager
 - Requires user authentication
 - Ensures users can only access links for trips they belong to
 
+**TripEventsController**
+- Nested CRUD operations under trips for managing trip events
+- Requires user authentication
+- Uses Pundit for role-based authorization
+- Ensures users can only access events for trips they belong to
+
 ### Development Workflow
 
 Before committing changes:
@@ -150,12 +170,13 @@ All development commands use the `bin/` prefix for consistency and to ensure the
 
 ### Database Schema
 
-The application uses five main tables:
+The application uses six main tables:
 - `users` - User accounts with Devise fields and OAuth integration
 - `trips` - Travel plans with multi-user support
 - `trip_memberships` - Join table linking users to trips with roles
 - `invites` - Secure invite tokens for trip sharing
 - `links` - URLs associated with trips
+- `trip_events` - Time-based events and activities associated with trips
 
 Foreign key relationships ensure data integrity, and dependent destroys clean up associated records when parent records are deleted.
 

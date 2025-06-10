@@ -11,3 +11,4 @@ This is a Rails app.
 - Make sure system tests pass
 - Make sure there are no linter offences
 - Make sure there are no security vulnerabilities (run brakeman)
+- Always update CONTRIBUTING.md
