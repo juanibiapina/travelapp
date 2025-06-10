@@ -153,6 +153,7 @@ bin/brakeman --no-pager
 - Devise for authentication
 - Pundit for authorization
 - PWA capabilities (partially implemented)
+- Sentry integration for error monitoring and performance tracking
 
 ### Controllers
 
@@ -215,6 +216,19 @@ The application uses eight main tables:
 - `transport_users` - Join table linking users to transports for tracking who is taking each transport
 
 Foreign key relationships ensure data integrity, and dependent destroys clean up associated records when parent records are deleted.
+
+### Environment Variables
+
+The application requires the following environment variables for full functionality:
+
+**Required for production:**
+- `SENTRY_DSN` - Sentry Data Source Name for error reporting and performance monitoring
+
+**Required for Google OAuth:**
+- `GOOGLE_CLIENT_ID` - Google OAuth client ID
+- `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
+
+Note: Sentry is only enabled in production and staging environments by default.
 
 ## Installing the `pg` gem
 
