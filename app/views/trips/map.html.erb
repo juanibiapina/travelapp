@@ -1,0 +1,21 @@
+<% content_for :title, "#{@trip.name} - Map" %>
+<% content_for :header do %>
+  <%= render "header_with_tabs" %>
+<% end %>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-4 py-5 sm:p-6">
+      <div class="mb-6">
+        <h2 class="text-lg font-medium text-gray-900">Trip Map</h2>
+        <p class="mt-1 text-sm text-gray-600">View your trip location on the map</p>
+      </div>
+
+      <!-- Map Container -->
+      <div id="map" 
+           class="w-full h-96 rounded-lg border border-gray-300"
+           data-controller="map">
+      </div>
+    </div>
+  </div>
+</div>

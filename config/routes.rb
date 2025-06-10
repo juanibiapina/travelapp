@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     resources :invites, only: [ :create, :destroy, :index ]
     get :members, on: :member
     get :timeline, on: :member
+    get :map, on: :member
   end
 
   # Public invite acceptance route

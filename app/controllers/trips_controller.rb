@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_action :authenticate_account!
-  before_action :set_trip, only: %i[ show edit update destroy members timeline ]
+  before_action :set_trip, only: %i[ show edit update destroy members timeline map ]
 
   # GET /trips or /trips.json
   def index
@@ -26,6 +26,11 @@ class TripsController < ApplicationController
     @selected_events = @trip_events.select do |event|
       @selected_date >= event.start_date && @selected_date <= event.end_date
     end
+  end
+
+  # GET /trips/1/map
+  def map
+    authorize @trip, :show?
   end
 
   # GET /trips/new
