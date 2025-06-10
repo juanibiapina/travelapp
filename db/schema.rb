@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_10_050817) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_10_052206) do
   create_table "accounts", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "email", default: "", null: false
@@ -57,6 +57,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_050817) do
     t.index ["trip_id"], name: "index_places_on_trip_id"
   end
 
+  create_table "transport_users", force: :cascade do |t|
+    t.integer "transport_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["transport_id", "user_id"], name: "index_transport_users_on_transport_id_and_user_id", unique: true
+    t.index ["transport_id"], name: "index_transport_users_on_transport_id"
+    t.index ["user_id"], name: "index_transport_users_on_user_id"
+  end
+
+  create_table "transports", force: :cascade do |t|
+    t.string "name", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.integer "trip_id", null: false
+    t.integer "origin_place_id", null: false
+    t.integer "destination_place_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["destination_place_id"], name: "index_transports_on_destination_place_id"
+    t.index ["origin_place_id"], name: "index_transports_on_origin_place_id"
+    t.index ["trip_id"], name: "index_transports_on_trip_id"
+  end
+
   create_table "trip_events", force: :cascade do |t|
     t.string "title", null: false
     t.date "start_date", null: false
@@ -100,6 +124,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_050817) do
   add_foreign_key "invites", "users", column: "created_by_id"
   add_foreign_key "links", "trips"
   add_foreign_key "places", "trips"
+  add_foreign_key "transport_users", "transports"
+  add_foreign_key "transport_users", "users"
+  add_foreign_key "transports", "places", column: "destination_place_id"
+  add_foreign_key "transports", "places", column: "origin_place_id"
+  add_foreign_key "transports", "trips"
   add_foreign_key "trip_events", "trips"
   add_foreign_key "trip_memberships", "places", column: "starting_place_id"
   add_foreign_key "trip_memberships", "trips"

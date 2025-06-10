@@ -5,3 +5,15 @@ one:
 two:
   name: Louvre Museum
   trip: two
+
+three:
+  name: Notre Dame
+  trip: one
+
+four:
+  name: Arc de Triomphe
+  trip: one
+
+five:
+  name: Unused Place
+  trip: one
