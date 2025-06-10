@@ -55,4 +55,64 @@ class TripEventTest < ActiveSupport::TestCase
       @trip.destroy
     end
   end
+
+  test "should validate start_date is within trip date range" do
+    @trip.update!(start_date: Date.current, end_date: Date.current + 7.days)
+
+    # Test start_date before trip start
+    @trip_event.start_date = Date.current - 1.day
+    @trip_event.end_date = Date.current + 1.day
+    assert_not @trip_event.valid?
+    assert_includes @trip_event.errors[:start_date], "must be on or after the trip start date (#{@trip.start_date.strftime('%B %d, %Y')})"
+
+    # Test start_date after trip end
+    @trip_event.start_date = Date.current + 8.days
+    @trip_event.end_date = Date.current + 9.days
+    assert_not @trip_event.valid?
+    assert_includes @trip_event.errors[:start_date], "must be on or before the trip end date (#{@trip.end_date.strftime('%B %d, %Y')})"
+  end
+
+  test "should validate end_date is within trip date range" do
+    @trip.update!(start_date: Date.current, end_date: Date.current + 7.days)
+
+    # Test end_date before trip start
+    @trip_event.start_date = Date.current - 2.days
+    @trip_event.end_date = Date.current - 1.day
+    assert_not @trip_event.valid?
+    assert_includes @trip_event.errors[:end_date], "must be on or after the trip start date (#{@trip.start_date.strftime('%B %d, %Y')})"
+
+    # Test end_date after trip end
+    @trip_event.start_date = Date.current + 1.day
+    @trip_event.end_date = Date.current + 8.days
+    assert_not @trip_event.valid?
+    assert_includes @trip_event.errors[:end_date], "must be on or before the trip end date (#{@trip.end_date.strftime('%B %d, %Y')})"
+  end
+
+  test "should allow event dates within trip date range" do
+    @trip.update!(start_date: Date.current, end_date: Date.current + 7.days)
+
+    # Test dates exactly on trip boundaries
+    @trip_event.start_date = Date.current
+    @trip_event.end_date = Date.current + 7.days
+    assert @trip_event.valid?
+
+    # Test dates within trip range
+    @trip_event.start_date = Date.current + 1.day
+    @trip_event.end_date = Date.current + 3.days
+    assert @trip_event.valid?
+  end
+
+  test "should not cause errors when trip exists" do
+    # Test that our validation doesn't break existing functionality
+    @trip.update!(start_date: Date.current, end_date: Date.current + 7.days)
+
+    event = @trip.trip_events.build(
+      title: "Test Event",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 2.days
+    )
+
+    # Should be valid when dates are within range
+    assert event.valid?
+  end
 end
