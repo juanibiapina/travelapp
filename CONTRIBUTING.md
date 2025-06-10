@@ -79,6 +79,12 @@ bin/brakeman --no-pager
 - Validates that end_date is greater than or equal to start_date
 - Enables chronological organization of trip activities
 
+**Place**
+- Belongs to a trip
+- Represents locations that can be plotted on a map
+- Has required field: name
+- Simple structure for storing location information
+
 ### Key Features
 
 **Authentication & Authorization**
@@ -106,6 +112,12 @@ bin/brakeman --no-pager
 - Add links to trips for organizing travel-related URLs
 - Nested resource structure (trips have many links)
 - URL validation to ensure valid web addresses
+
+**Place Management**
+- Add places to trips for organizing locations
+- Each place has a name field
+- Nested resource structure (trips have many places)
+- Full CRUD operations with proper authorization
 
 **Event Management**
 - Add events to trips for organizing time-based activities
@@ -152,6 +164,12 @@ bin/brakeman --no-pager
 - Requires user authentication
 - Ensures users can only access links for trips they belong to
 
+**PlacesController**
+- Nested CRUD operations under trips for managing places
+- Requires user authentication
+- Uses Pundit for role-based authorization
+- Ensures users can only access places for trips they belong to
+
 **TripEventsController**
 - Nested CRUD operations under trips for managing trip events
 - Requires user authentication
@@ -170,12 +188,13 @@ All development commands use the `bin/` prefix for consistency and to ensure the
 
 ### Database Schema
 
-The application uses six main tables:
+The application uses seven main tables:
 - `users` - User accounts with Devise fields and OAuth integration
 - `trips` - Travel plans with multi-user support
 - `trip_memberships` - Join table linking users to trips with roles
 - `invites` - Secure invite tokens for trip sharing
 - `links` - URLs associated with trips
+- `places` - Named locations associated with trips
 - `trip_events` - Time-based events and activities associated with trips
 
 Foreign key relationships ensure data integrity, and dependent destroys clean up associated records when parent records are deleted.
