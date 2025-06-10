@@ -4,19 +4,6 @@ Rails.application.routes.draw do
     registrations: "accounts/registrations"
   }
 
-  resources :trips do
-    resources :links
-    resources :places
-    resources :trip_events
-    resources :invites, only: [ :create, :destroy, :index ]
-    get :members, on: :member
-    get :timeline, on: :member
-    patch :update_member_starting_place, on: :member
-  end
-
-  # Public invite acceptance route
-  get "invite/:token", to: "invites#accept", as: :accept_invite
-
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -28,5 +15,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "trips#index"
+  root "home#index"
 end

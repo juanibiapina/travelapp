@@ -1,0 +1,67 @@
+<% content_for :title, "Welcome" %>
+
+<div class="max-w-4xl mx-auto py-16">
+  <!-- Header with user icon -->
+  <div class="flex justify-between items-center mb-8">
+    <div class="text-center flex-1">
+      <h1 class="text-6xl font-bold text-gray-900 mb-4">Rails Template</h1>
+      <p class="text-xl text-gray-600 mb-8">A clean starting point for your next Rails application</p>
+    </div>
+    <div class="flex items-center">
+      <%= render "shared/user_icon" %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">What's Included</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">🔐 Authentication</h3>
+        <p class="text-gray-600">Devise with Google OAuth integration</p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">🎨 Styling</h3>
+        <p class="text-gray-600">Tailwind CSS with Heroicons</p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">🚀 Deployment</h3>
+        <p class="text-gray-600">Kamal deployment configuration</p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">🔒 Security</h3>
+        <p class="text-gray-600">Pundit authorization & security scanning</p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">💾 Database</h3>
+        <p class="text-gray-600">SQLite (dev) / PostgreSQL (production)</p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">📱 Modern Frontend</h3>
+        <p class="text-gray-600">Hotwire (Turbo + Stimulus) + Importmap</p>
+      </div>
+    </div>
+  </div>
+
+  <% if account_signed_in? %>
+    <div class="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+      <h3 class="font-semibold text-green-900 mb-2">Welcome back, <%= current_account.user.name || current_account.email %>!</h3>
+      <p class="text-green-700">You're successfully authenticated. Start building your application!</p>
+      <div class="mt-4">
+        <%= link_to "Sign Out", destroy_account_session_path, 
+            method: :delete,
+            class: "inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-200" %>
+      </div>
+    </div>
+  <% else %>
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+      <h3 class="font-semibold text-blue-900 mb-2">Get Started</h3>
+      <p class="text-blue-700 mb-4">Sign up or sign in to begin using the application</p>
+      <div class="flex justify-center gap-4">
+        <%= link_to "Sign Up", new_account_registration_path, 
+            class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-200" %>
+        <%= link_to "Sign In", new_account_session_path, 
+            class: "inline-flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg border border-gray-300 transition duration-200" %>
+      </div>
+    </div>
+  <% end %>
+</div>

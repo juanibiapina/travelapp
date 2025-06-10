@@ -1,6 +1,6 @@
-# Travel App
+# Rails Template
 
-A Rails application for organizing and managing travel plans.
+A clean Rails application template with authentication, authorization, and modern frontend setup.
 
 ## Getting Started
 

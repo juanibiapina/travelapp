@@ -1,6 +1,6 @@
-# Contributing to Travel App
+# Contributing to Rails Template
 
-Thank you for your interest in contributing to the Travel App! This document provides all the information you need to get started with development.
+Thank you for your interest in contributing to the Rails Template! This document provides all the information you need to get started with development.
 
 **Important**: Please keep this document up to date as the project evolves. Changes to development processes, new dependencies, or architectural updates should be reflected here.
 
@@ -43,90 +43,21 @@ bin/brakeman --no-pager
 
 ### Models and Data Structure
 
-**User**
+**Account**
 - Handles authentication via Devise with email/password and Google OAuth
 - Includes provider/uid fields for OAuth integration
+- Associated with a User for profile information
 
-**Trip**
-- Belongs to a user (as owner)
-- Has a name field
-- Can contain multiple links
-- Supports multiple members through trip memberships
-- Can have shareable invite links for joining
-- Represents a travel plan or itinerary
-
-**TripMembership**
-- Join table connecting users to trips
-- Tracks user roles (owner/member) within trips
-- Ensures one membership per user per trip
-- Enables multi-user trip collaboration
-- Includes optional starting place for each member (where they are at trip start)
-
-**Invite**
-- Belongs to a trip and created by a user
-- Contains secure tokens for sharing trip access
-- Can be activated/deactivated and optionally expire
-- Enables easy trip sharing without email invitations
-
-**Link**
-- Belongs to a trip
-- Stores URLs related to the trip (hotels, flights, activities, etc.)
-- Validates URL format to ensure proper HTTP/HTTPS URLs
-
-**TripEvent**
-- Belongs to a trip
-- Represents events that happen during a trip (accommodations, train rides, activities, etc.)
-- Has required fields: title, start_date, end_date
-- Validates that end_date is greater than or equal to start_date
-- Enables chronological organization of trip activities
-
-**Place**
-- Belongs to a trip
-- Represents locations that can be plotted on a map
-- Has required field: name
-- Simple structure for storing location information
+**User**
+- Stores user profile information (name, picture)
+- Associated with an Account for authentication
 
 ### Key Features
 
-**Authentication & Authorization**
-- User registration and login with email/password
-- Google OAuth integration for easy sign-in
-- Role-based authorization with Pundit policies
-- Trip ownership and membership management
-- Secure invite token handling for trip sharing
-
-**Trip Management**
-- Create, view, edit, and delete trips
-- Multi-user trip collaboration with role-based access (owners and members)
-- Generate shareable invite links for easy trip joining
-- Revoke invite links to control access
-- Clean, responsive interface for trip management
-- Set starting places for trip members to track where they begin their journey
-
-**Invite Link System**
-- Trip owners can generate secure invite links from the trip page
-- Links use cryptographically secure tokens for safety
-- Users can join trips by clicking invite links (authentication required)
-- Automatic redirection flow for unauthenticated users
-- Support for link revocation and optional expiration
-
-**Link Organization**
-- Add links to trips for organizing travel-related URLs
-- Nested resource structure (trips have many links)
-- URL validation to ensure valid web addresses
-
-**Place Management**
-- Add places to trips for organizing locations
-- Each place has a name field
-- Nested resource structure (trips have many places)
-- Full CRUD operations with proper authorization
-
-**Event Management**
-- Add events to trips for organizing time-based activities
-- Each event has a title, start date, and end date
-- Chronological ordering and duration calculation
-- Nested resource structure (trips have many trip events)
-- Full CRUD operations with proper authorization
+**User Authentication**
+- Devise-based authentication with email/password
+- Google OAuth integration for social login
+- Account and User separation for flexible authentication
 
 **User Interface**
 - Responsive design with Tailwind CSS
@@ -139,44 +70,21 @@ bin/brakeman --no-pager
 - Importmap for JavaScript management
 - Tailwind CSS for styling
 - Devise for authentication
-- Pundit for authorization
+- Pundit for authorization (basic setup)
 - PWA capabilities (partially implemented)
 
 ### Controllers
 
 **ApplicationController**
-- Base controller with Pundit authorization
-- Modern browser requirement
-- Handles authorization errors gracefully
+- Base controller with Pundit integration
+- Account-based authentication helpers
 
-**TripsController**
-- Standard CRUD operations for trips
-- Trip membership management
-- Requires user authentication
-- Uses Pundit for role-based authorization
+**HomeController**
+- Landing page controller
 
-**InvitesController**
-- Generates and manages invite links for trips
-- Handles invite acceptance with authentication flow
-- Supports invite revocation by trip owners
-- Manages session-based invite token storage
-
-**LinksController**
-- Nested CRUD operations under trips
-- Requires user authentication
-- Ensures users can only access links for trips they belong to
-
-**PlacesController**
-- Nested CRUD operations under trips for managing places
-- Requires user authentication
-- Uses Pundit for role-based authorization
-- Ensures users can only access places for trips they belong to
-
-**TripEventsController**
-- Nested CRUD operations under trips for managing trip events
-- Requires user authentication
-- Uses Pundit for role-based authorization
-- Ensures users can only access events for trips they belong to
+**Account Controllers**
+- Devise-generated controllers for authentication
+- OAuth callback handling
 
 ### Development Workflow
 
@@ -190,14 +98,9 @@ All development commands use the `bin/` prefix for consistency and to ensure the
 
 ### Database Schema
 
-The application uses seven main tables:
-- `users` - User accounts with Devise fields and OAuth integration
-- `trips` - Travel plans with multi-user support
-- `trip_memberships` - Join table linking users to trips with roles and optional starting places
-- `invites` - Secure invite tokens for trip sharing
-- `links` - URLs associated with trips
-- `places` - Named locations associated with trips
-- `trip_events` - Time-based events and activities associated with trips
+The application uses two main tables:
+- `accounts` - Authentication credentials with Devise fields and OAuth integration
+- `users` - User profile information (name, picture) linked to accounts
 
 Foreign key relationships ensure data integrity, and dependent destroys clean up associated records when parent records are deleted.
 
