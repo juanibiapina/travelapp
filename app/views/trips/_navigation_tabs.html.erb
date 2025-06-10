@@ -2,6 +2,7 @@
   <%= tab_link(@trip, "archive-box", "Overview") %>
   <%= tab_link(trip_trip_events_path(@trip), "calendar", "Events", @trip.trip_events.count) %>
   <%= tab_link(timeline_trip_path(@trip), "clock", "Timeline") %>
+  <%= tab_link(trip_places_path(@trip), "map-pin", "Places", @trip.places.count) %>
   <%= tab_link(trip_links_path(@trip), "link", "Links", @trip.links.count) %>
   <%= tab_link(trip_invites_path(@trip), "plus", "Invitations", @trip.invites.valid_invites.count) %>
   <%= tab_link(members_trip_path(@trip), "users", "Members", @trip.trip_memberships.count) %>

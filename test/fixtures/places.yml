@@ -1,0 +1,7 @@
+one:
+  name: Eiffel Tower
+  trip: one
+
+two:
+  name: Louvre Museum
+  trip: two
