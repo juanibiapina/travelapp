@@ -43,7 +43,7 @@
                         <div class="flex -space-x-1 mr-2">
                           <% transport.users.limit(3).each do |user| %>
                             <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-xs font-medium text-gray-700 border-2 border-white">
-                              <%= user.account.email.first.upcase %>
+                              <%= user.name.first.upcase %>
                             </div>
                           <% end %>
                           <% if transport.users.count > 3 %>
