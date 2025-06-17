@@ -77,4 +77,21 @@ class TransportsTest < ApplicationSystemTestCase
     assert_text "Add flights, trains, buses, or other transportation"
     assert_selector "a", text: "Add Your First Transport"
   end
+
+  test "transport index handles users without accounts" do
+    # Create a user without an account
+    user_without_account = User.create!(name: "User Without Account")
+
+    # Assign this user to a transport
+    @transport.users << user_without_account
+
+    # Should now work without error, showing user's name initial instead of email
+    visit trip_transports_url(@trip)
+
+    # Should display the transport index without errors
+    assert_selector "h2", text: "Transport"
+
+    # Should display the first letter of the user's name
+    assert_selector ".w-6", text: "U" # First letter of "User Without Account"
+  end
 end
