@@ -62,7 +62,7 @@
       <% @trip.members.each do |user| %>
         <label class="flex items-center">
           <%= check_box_tag "transport[user_ids][]", user.id, transport.users.include?(user), class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-offset-0 h-4 w-4" %>
-          <span class="ml-2 text-sm text-gray-700"><%= user.name.present? ? user.name : user.account&.email %></span>
+          <span class="ml-2 text-sm text-gray-700"><%= user.name %></span>
         </label>
       <% end %>
       <%= hidden_field_tag "transport[user_ids][]", "" %>
