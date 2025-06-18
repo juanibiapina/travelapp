@@ -1,5 +1,4 @@
 class Trip < ApplicationRecord
-  has_many :links, dependent: :destroy
   has_many :trip_events, dependent: :destroy
   has_many :transports, dependent: :destroy
   has_many :places, dependent: :destroy

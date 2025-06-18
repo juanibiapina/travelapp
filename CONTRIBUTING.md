@@ -50,7 +50,6 @@ bin/brakeman --no-pager
 **Trip**
 - Belongs to a user (as owner)
 - Has a name field
-- Can contain multiple links
 - Supports multiple members through trip memberships
 - Can have shareable invite links for joining
 - Represents a travel plan or itinerary
@@ -67,11 +66,6 @@ bin/brakeman --no-pager
 - Contains secure tokens for sharing trip access
 - Can be activated/deactivated and optionally expire
 - Enables easy trip sharing without email invitations
-
-**Link**
-- Belongs to a trip
-- Stores URLs related to the trip (hotels, flights, activities, etc.)
-- Validates URL format to ensure proper HTTP/HTTPS URLs
 
 **TripEvent**
 - Belongs to a trip
@@ -121,11 +115,6 @@ bin/brakeman --no-pager
 - Automatic redirection flow for unauthenticated users
 - Support for link revocation and optional expiration
 
-**Link Organization**
-- Add links to trips for organizing travel-related URLs
-- Nested resource structure (trips have many links)
-- URL validation to ensure valid web addresses
-
 **Place Management**
 - Add places to trips for organizing locations
 - Each place has a name field
@@ -174,11 +163,6 @@ bin/brakeman --no-pager
 - Supports invite revocation by trip owners
 - Manages session-based invite token storage
 
-**LinksController**
-- Nested CRUD operations under trips
-- Requires user authentication
-- Ensures users can only access links for trips they belong to
-
 **PlacesController**
 - Nested CRUD operations under trips for managing places
 - Requires user authentication
@@ -204,12 +188,11 @@ All development commands use the `bin/` prefix for consistency and to ensure the
 
 ### Database Schema
 
-The application uses eight main tables:
+The application uses seven main tables:
 - `users` - User accounts with Devise fields and OAuth integration
 - `trips` - Travel plans with multi-user support
 - `trip_memberships` - Join table linking users to trips with roles and optional starting places
 - `invites` - Secure invite tokens for trip sharing
-- `links` - URLs associated with trips
 - `places` - Named locations associated with trips
 - `trip_events` - Time-based events and activities associated with trips
 - `transports` - Transportation between places during trips

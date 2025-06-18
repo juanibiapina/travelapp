@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   }
 
   resources :trips do
-    resources :links
     resources :places
     resources :trip_events
     resources :transports
