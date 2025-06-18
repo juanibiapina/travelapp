@@ -5,7 +5,7 @@ class PlacesControllerTest < ActionDispatch::IntegrationTest
     @user = users(:one)
     @account = accounts(:one)
     @trip = trips(:one)
-    @place = places(:one)
+    @place = places(:five) # Use an unused place that can be safely deleted
     sign_in @account
   end
 
