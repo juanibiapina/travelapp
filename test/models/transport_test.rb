@@ -156,8 +156,16 @@ class TransportTest < ActiveSupport::TestCase
     )
 
     # Create places for this trip
-    origin = fresh_trip.places.create!(name: "Origin")
-    destination = fresh_trip.places.create!(name: "Destination")
+    origin = fresh_trip.places.create!(
+      name: "Origin",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 3.days
+    )
+    destination = fresh_trip.places.create!(
+      name: "Destination",
+      start_date: Date.current + 2.days,
+      end_date: Date.current + 4.days
+    )
 
     # Create a transport for this trip
     transport = fresh_trip.transports.create!(

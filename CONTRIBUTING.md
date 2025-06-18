@@ -77,8 +77,9 @@ bin/brakeman --no-pager
 **Place**
 - Belongs to a trip
 - Represents locations that can be plotted on a map
-- Has required field: name
-- Simple structure for storing location information
+- Has required fields: name, start_date, end_date
+- Validates that end_date is greater than or equal to start_date
+- Validates that start and end dates are within the trip's date range
 - Cannot be deleted if referenced by transports (origin or destination)
 - Can have multiple accommodations associated with it
 

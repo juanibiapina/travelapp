@@ -12,6 +12,9 @@
           </div>
           <div>
             <h1 class="text-2xl font-bold text-gray-900"><%= @place.name %></h1>
+            <p class="text-sm text-gray-600 mt-1">
+              <%= @place.start_date.strftime("%B %d, %Y") %> - <%= @place.end_date.strftime("%B %d, %Y") %>
+            </p>
           </div>
         </div>
         <div class="flex items-center gap-2">

@@ -21,7 +21,13 @@ class PlacesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create place" do
     assert_difference("Place.count") do
-      post trip_places_url(@trip), params: { place: { name: "Notre Dame" } }
+      post trip_places_url(@trip), params: {
+        place: {
+          name: "Notre Dame",
+          start_date: Date.current + 1.day,
+          end_date: Date.current + 3.days
+        }
+      }
     end
 
     assert_redirected_to trip_places_url(@trip)
@@ -48,7 +54,13 @@ class PlacesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update place" do
-    patch trip_place_url(@trip, @place), params: { place: { name: "Updated Place Name" } }
+    patch trip_place_url(@trip, @place), params: {
+      place: {
+        name: "Updated Place Name",
+        start_date: Date.current + 1.day,
+        end_date: Date.current + 3.days
+      }
+    }
     assert_redirected_to trip_place_url(@trip, @place)
   end
 
@@ -81,7 +93,13 @@ class PlacesControllerTest < ActionDispatch::IntegrationTest
     @trip.trip_memberships.create!(user: @user, role: "member")
 
     assert_no_difference("Place.count") do
-      post trip_places_url(@trip), params: { place: { name: "Test Place" } }
+      post trip_places_url(@trip), params: {
+        place: {
+          name: "Test Place",
+          start_date: Date.current + 1.day,
+          end_date: Date.current + 3.days
+        }
+      }
     end
     assert_response :not_found
   end

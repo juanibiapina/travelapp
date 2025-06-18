@@ -39,14 +39,24 @@ class TripMembershipTest < ActiveSupport::TestCase
   end
 
   test "should accept starting place from same trip" do
-    place = Place.create!(trip: @trip, name: "Starting Location")
+    place = Place.create!(
+      trip: @trip,
+      name: "Starting Location",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 3.days
+    )
     membership = TripMembership.new(trip: @trip, user: @other_user, role: "member", starting_place: place)
     assert membership.valid?
   end
 
   test "should reject starting place from different trip" do
     other_trip = trips(:two)
-    place = Place.create!(trip: other_trip, name: "Starting Location")
+    place = Place.create!(
+      trip: other_trip,
+      name: "Starting Location",
+      start_date: other_trip.start_date + 1.day,
+      end_date: other_trip.start_date + 3.days
+    )
     membership = TripMembership.new(trip: @trip, user: @other_user, role: "member", starting_place: place)
     assert_not membership.valid?
     assert_includes membership.errors[:starting_place], "must belong to the same trip"

@@ -126,7 +126,12 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update member starting place" do
     membership = @trip.trip_memberships.first
-    place = Place.create!(trip: @trip, name: "Airport")
+    place = Place.create!(
+      trip: @trip,
+      name: "Airport",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 3.days
+    )
 
     patch update_member_starting_place_trip_url(@trip), params: {
       membership_id: membership.id,
@@ -138,7 +143,12 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should clear member starting place" do
-    place = Place.create!(trip: @trip, name: "Airport")
+    place = Place.create!(
+      trip: @trip,
+      name: "Airport",
+      start_date: Date.current + 1.day,
+      end_date: Date.current + 3.days
+    )
     membership = @trip.trip_memberships.first
     membership.update!(starting_place: place)
 
