@@ -22,8 +22,8 @@ class AuthenticationTest < ApplicationSystemTestCase
     fill_in "Password confirmation", with: password
     click_on "Sign up"
 
-    # Should be redirected to trips index after successful signup
-    assert page.has_selector?("h1", text: "Your Trips"), "Should be on trips page with 'Your Trips' heading"
+    # Should be redirected to home page after successful signup
+    assert page.has_selector?("h1", text: "Welcome to Your Rails App"), "Should be on home page with welcome heading"
 
     # Step 2: Sign out
     # Open the user dropdown menu first
@@ -41,8 +41,8 @@ class AuthenticationTest < ApplicationSystemTestCase
     fill_in "Password", with: password
     click_on "Log in"
 
-    # Should be redirected back to trips index after successful sign in
-    assert page.has_selector?("h1", text: "Your Trips"), "Should be back on trips page after sign in"
+    # Should be redirected back to home page after successful sign in
+    assert page.has_selector?("h1", text: "Welcome to Your Rails App"), "Should be back on home page after sign in"
     assert page.has_selector?("button[aria-label='User menu']"), "User menu should be visible after signing in"
   end
 end
