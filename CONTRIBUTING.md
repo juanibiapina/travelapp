@@ -80,6 +80,15 @@ bin/brakeman --no-pager
 - Has required field: name
 - Simple structure for storing location information
 - Cannot be deleted if referenced by transports (origin or destination)
+- Can have multiple accommodations associated with it
+
+**Accommodation**
+- Belongs to a place (and indirectly to a trip through the place)
+- Represents places to stay during a trip (hotels, apartments, hostels, etc.)
+- Has required fields: title, start_date, end_date, place_id
+- Validates that end_date is greater than or equal to start_date
+- Validates that start and end dates are within the trip's date range
+- Enables tracking of where travelers will stay during their trip
 
 **Transport**
 - Belongs to a trip
@@ -120,6 +129,14 @@ bin/brakeman --no-pager
 - Each place has a name field
 - Nested resource structure (trips have many places)
 - Full CRUD operations with proper authorization
+
+**Accommodation Management**
+- Add accommodations to places for tracking where to stay during trips
+- Each accommodation has title, start date, end date, and belongs to a place
+- Full CRUD operations with proper authorization
+- Date validation ensures accommodation dates are within trip date range
+- Dedicated tab in trip navigation for easy access
+- Support for various accommodation types (hotels, apartments, hostels, etc.)
 
 **Transport Management**
 - Add transports to trips for organizing transportation between places

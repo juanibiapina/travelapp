@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   }
 
   resources :trips do
+    resources :accommodations
     resources :places
     resources :trip_events
     resources :transports

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: Hotel Paris
+  start_date: <%= Date.current + 1.day %>
+  end_date: <%= Date.current + 3.days %>
+  place: one
+
+two:
+  title: Apartment Rental
+  start_date: <%= Date.current + 1.month + 2.days %>
+  end_date: <%= Date.current + 1.month + 5.days %>
+  place: two
