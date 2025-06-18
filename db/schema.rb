@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_18_070208) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_18_164632) do
+  create_table "accommodations", force: :cascade do |t|
+    t.string "title", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.integer "place_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["place_id"], name: "index_accommodations_on_place_id"
+  end
+
   create_table "accounts", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "email", default: "", null: false
@@ -111,6 +121,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_070208) do
     t.string "picture"
   end
 
+  add_foreign_key "accommodations", "places"
   add_foreign_key "accounts", "users"
   add_foreign_key "invites", "trips"
   add_foreign_key "invites", "users", column: "created_by_id"

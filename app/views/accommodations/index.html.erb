@@ -1,0 +1,61 @@
+<% content_for :title, "Accommodations" %>
+<% content_for :header do %>
+  <%= render "trips/header_with_tabs" %>
+<% end %>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-4 py-5 sm:p-6">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-lg font-medium text-gray-900">Accommodations</h2>
+          <p class="mt-1 text-sm text-gray-600">Hotels, apartments, and other places to stay during your trip</p>
+        </div>
+        <%= link_to "Add New Accommodation", new_trip_accommodation_path(@trip), class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+      </div>
+
+      <div id="accommodations" class="space-y-3">
+        <% if @accommodations.any? %>
+          <% @accommodations.each do |accommodation| %>
+            <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all duration-200">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 mr-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
+                      <%= heroicon "home", options: { class: "w-4 h-4 text-green-600" } %>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-medium text-gray-900"><%= accommodation.title %></h3>
+                    <p class="text-sm text-gray-500">
+                      <% if accommodation.start_date == accommodation.end_date %>
+                        <%= accommodation.start_date.strftime("%B %d, %Y") %>
+                      <% else %>
+                        <%= accommodation.start_date.strftime("%B %d") %> - <%= accommodation.end_date.strftime("%B %d, %Y") %>
+                      <% end %>
+                      • <%= accommodation.place.name %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 ml-4 flex-shrink-0">
+                <%= link_to "Show", [@trip, accommodation], class: "text-blue-600 hover:text-blue-800 text-sm font-medium px-2 py-1 rounded transition-colors duration-200" %>
+                <%= link_to "Edit", edit_trip_accommodation_path(@trip, accommodation), class: "text-blue-600 hover:text-blue-800 text-sm font-medium px-2 py-1 rounded transition-colors duration-200" %>
+                <%= button_to "Delete", [@trip, accommodation], method: :delete, class: "text-red-600 hover:text-red-800 text-sm font-medium bg-transparent border-0 px-2 py-1 rounded transition-colors duration-200", data: { turbo_confirm: "Are you sure?" } %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+            <%= heroicon "home", options: { class: "mx-auto h-12 w-12 text-gray-400" } %>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No accommodations added yet</h3>
+            <p class="mt-1 text-sm text-gray-500">Add hotels, apartments, or other places to stay</p>
+            <div class="mt-6">
+              <%= link_to "Add Your First Accommodation", new_trip_accommodation_path(@trip), class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

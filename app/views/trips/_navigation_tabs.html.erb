@@ -1,6 +1,7 @@
 <nav class="flex flex-wrap gap-4 sm:gap-8" aria-label="Trip navigation">
   <%= tab_link(@trip, "archive-box", "Overview") %>
   <%= tab_link(trip_trip_events_path(@trip), "calendar", "Events", @trip.trip_events.count) %>
+  <%= tab_link(trip_accommodations_path(@trip), "home", "Accommodations", @trip.accommodations.count) %>
   <%= tab_link(timeline_trip_path(@trip), "clock", "Timeline") %>
   <%= tab_link(trip_places_path(@trip), "map-pin", "Places", @trip.places.count) %>
   <%= tab_link(trip_transports_path(@trip), "truck", "Transport", @trip.transports.count) %>
