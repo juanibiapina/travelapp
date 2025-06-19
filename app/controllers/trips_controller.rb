@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_action :authenticate_account!
-  before_action :set_trip, only: %i[ show edit update destroy members timeline update_member_starting_place ]
+  before_action :set_trip, only: %i[ show edit update destroy members update_member_starting_place ]
 
   # GET /trips or /trips.json
   def index
@@ -17,16 +17,6 @@ class TripsController < ApplicationController
     authorize @trip, :show?
     @memberships = @trip.trip_memberships.includes(:user, :starting_place)
     @places = @trip.places.order(:name)
-  end
-
-  # GET /trips/1/timeline
-  def timeline
-    authorize @trip, :show?
-    @trip_events = @trip.trip_events.order(:start_date)
-    @selected_date = params[:date]&.to_date || @trip.start_date
-    @selected_events = @trip_events.select do |event|
-      @selected_date >= event.start_date && @selected_date <= event.end_date
-    end
   end
 
   # GET /trips/new

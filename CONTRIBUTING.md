@@ -67,13 +67,6 @@ bin/brakeman --no-pager
 - Can be activated/deactivated and optionally expire
 - Enables easy trip sharing without email invitations
 
-**TripEvent**
-- Belongs to a trip
-- Represents events that happen during a trip (accommodations, train rides, activities, etc.)
-- Has required fields: title, start_date, end_date
-- Validates that end_date is greater than or equal to start_date
-- Enables chronological organization of trip activities
-
 **Place**
 - Belongs to a trip
 - Represents locations that can be plotted on a map
@@ -223,13 +216,12 @@ All development commands use the `bin/` prefix for consistency and to ensure the
 
 ### Database Schema
 
-The application uses seven main tables:
+The application uses six main tables:
 - `users` - User accounts with Devise fields and OAuth integration
 - `trips` - Travel plans with multi-user support
 - `trip_memberships` - Join table linking users to trips with roles and optional starting places
 - `invites` - Secure invite tokens for trip sharing
 - `places` - Named locations associated with trips
-- `trip_events` - Time-based events and activities associated with trips
 - `transports` - Transportation between places during trips
 - `transport_users` - Join table linking users to transports for tracking who is taking each transport
 
