@@ -7,11 +7,9 @@ Rails.application.routes.draw do
   resources :trips do
     resources :accommodations
     resources :places
-    resources :trip_events
     resources :transports
     resources :invites, only: [ :create, :destroy, :index ]
     get :members, on: :member
-    get :timeline, on: :member
     patch :update_member_starting_place, on: :member
   end
 
