@@ -1,0 +1,28 @@
+<%# 
+  Shared component for place selection dropdowns
+  
+  Parameters:
+  - form: The form builder object
+  - field_name: The field name (e.g., :place_id, :origin_place_id, :destination_place_id)
+  - label_text: The label text to display
+  - prompt_text: The prompt text for the dropdown
+  - places: The collection of places to display
+  - selected_value: The currently selected value (optional)
+  - css_classes: CSS classes for the select element (optional)
+  - label_classes: CSS classes for the label element (optional)
+%>
+
+<%
+  # Set default values
+  selected_value ||= nil
+  css_classes ||= "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+  label_classes ||= "block text-sm font-medium text-gray-700"
+%>
+
+<div>
+  <%= form.label field_name, label_text, class: label_classes %>
+  <%= form.select field_name, 
+      options_from_collection_for_select(places, :id, :name, selected_value),
+      { prompt: prompt_text },
+      { class: css_classes } %>
+</div>

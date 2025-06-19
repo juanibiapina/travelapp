@@ -27,14 +27,14 @@
       <%= form.text_field :title, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "e.g., Grand Hotel, Airbnb Apartment, Hostel Downtown" %>
     </div>
 
-    <div>
-      <%= form.label :place_id, "Place", class: "block text-sm font-medium text-gray-700" %>
-      <%= form.select :place_id, 
-          options_from_collection_for_select(@places, :id, :name, accommodation.place_id),
-          { prompt: "Select a place..." },
-          { class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" } %>
-      <p class="mt-1 text-sm text-gray-500">Choose the location where this accommodation is situated</p>
-    </div>
+    <%= render "shared/place_select",
+        form: form,
+        field_name: :place_id,
+        label_text: "Place",
+        prompt_text: "Select a place...",
+        places: @places,
+        selected_value: accommodation.place_id %>
+    <p class="mt-1 text-sm text-gray-500">Choose the location where this accommodation is situated</p>
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
       <div>

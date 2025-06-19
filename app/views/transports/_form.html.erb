@@ -27,21 +27,25 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-      <%= form.label :origin_place_id, "Origin Place", class: "block text-sm font-medium text-gray-700 mb-2" %>
-      <%= form.select :origin_place_id, 
-          options_from_collection_for_select(@trip.places, :id, :name, transport.origin_place_id), 
-          { prompt: "Select origin place" }, 
-          { class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" } %>
-    </div>
+    <%= render "shared/place_select",
+        form: form,
+        field_name: :origin_place_id,
+        label_text: "Origin Place",
+        prompt_text: "Select origin place",
+        places: @places,
+        selected_value: transport.origin_place_id,
+        css_classes: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm",
+        label_classes: "block text-sm font-medium text-gray-700 mb-2" %>
     
-    <div>
-      <%= form.label :destination_place_id, "Destination Place", class: "block text-sm font-medium text-gray-700 mb-2" %>
-      <%= form.select :destination_place_id, 
-          options_from_collection_for_select(@trip.places, :id, :name, transport.destination_place_id), 
-          { prompt: "Select destination place" }, 
-          { class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" } %>
-    </div>
+    <%= render "shared/place_select",
+        form: form,
+        field_name: :destination_place_id,
+        label_text: "Destination Place",
+        prompt_text: "Select destination place",
+        places: @places,
+        selected_value: transport.destination_place_id,
+        css_classes: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm",
+        label_classes: "block text-sm font-medium text-gray-700 mb-2" %>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
