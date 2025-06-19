@@ -17,11 +17,13 @@ class TransportsController < ApplicationController
   # GET /trips/1/transports/new
   def new
     @transport = @trip.transports.build
+    @places = @trip.places.order(:name)
     authorize @transport
   end
 
   # GET /trips/1/transports/1/edit
   def edit
+    @places = @trip.places.order(:name)
     authorize @transport
   end
 
@@ -35,6 +37,7 @@ class TransportsController < ApplicationController
         format.html { redirect_to trip_transports_path(@trip), notice: "Transport was successfully created." }
         format.json { render :show, status: :created, location: [ @trip, @transport ] }
       else
+        @places = @trip.places.order(:name)
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @transport.errors, status: :unprocessable_entity }
       end
@@ -50,6 +53,7 @@ class TransportsController < ApplicationController
         format.html { redirect_to [ @trip, @transport ], notice: "Transport was successfully updated." }
         format.json { render :show, status: :ok, location: [ @trip, @transport ] }
       else
+        @places = @trip.places.order(:name)
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @transport.errors, status: :unprocessable_entity }
       end
