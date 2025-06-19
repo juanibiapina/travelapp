@@ -11,6 +11,9 @@ Rails.application.routes.draw do
     resources :invites, only: [ :create, :destroy, :index ]
     get :members, on: :member
     patch :update_member_starting_place, on: :member
+    post :create_guest_member, on: :member
+    patch :update_guest_member, on: :member
+    delete :destroy_guest_member, on: :member
   end
 
   # Public invite acceptance route
