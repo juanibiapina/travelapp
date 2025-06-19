@@ -45,11 +45,12 @@ class GuestMembersTest < ApplicationSystemTestCase
       find("button[title='Edit member']").click
     end
 
-    # Should show edit form
-    fill_in "user_name", with: "Updated Guest"
-    fill_in "user_picture", with: "http://example.com/updated.jpg"
-
-    click_button "Update"
+    # Should show edit form - fill it within the specific edit form container
+    within("#edit-member-#{@trip.trip_memberships.find_by(user: guest_user).id}") do
+      fill_in "user_name", with: "Updated Guest"
+      fill_in "user_picture", with: "http://example.com/updated.jpg"
+      click_button "Update"
+    end
 
     # Should see updated information
     assert_text "Member updated successfully"

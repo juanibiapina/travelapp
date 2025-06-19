@@ -46,6 +46,7 @@ bin/brakeman --no-pager
 **User**
 - Handles authentication via Devise with email/password and Google OAuth
 - Includes provider/uid fields for OAuth integration
+- Can exist without an associated Account (for guest members like children)
 
 **Trip**
 - Belongs to a user (as owner)
@@ -60,6 +61,7 @@ bin/brakeman --no-pager
 - Ensures one membership per user per trip
 - Enables multi-user trip collaboration
 - Includes optional starting place for each member (where they are at trip start)
+- Supports both users with accounts and guest users without accounts
 
 **Invite**
 - Belongs to a trip and created by a user
@@ -110,6 +112,7 @@ bin/brakeman --no-pager
 - Revoke invite links to control access
 - Clean, responsive interface for trip management
 - Set starting places for trip members to track where they begin their journey
+- Add guest members (users without accounts) for family members, children, etc.
 
 **Invite Link System**
 - Trip owners can generate secure invite links from the trip page
@@ -165,6 +168,7 @@ bin/brakeman --no-pager
 **TripsController**
 - Standard CRUD operations for trips
 - Trip membership management
+- Guest member management (create, update, delete users without accounts)
 - Requires user authentication
 - Uses Pundit for role-based authorization
 
