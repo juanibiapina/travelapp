@@ -1,19 +1,29 @@
 one:
   name: Eiffel Tower
   trip: one
+  start_date: <%= Date.current + 1.day %>
+  end_date: <%= Date.current + 3.days %>
 
 two:
   name: Louvre Museum
   trip: two
+  start_date: <%= Date.current + 1.month + 2.days %>
+  end_date: <%= Date.current + 1.month + 5.days %>
 
 three:
   name: Notre Dame
   trip: one
+  start_date: <%= Date.current + 2.days %>
+  end_date: <%= Date.current + 4.days %>
 
 four:
   name: Arc de Triomphe
   trip: one
+  start_date: <%= Date.current + 3.days %>
+  end_date: <%= Date.current + 5.days %>
 
 five:
   name: Unused Place
   trip: one
+  start_date: <%= Date.current + 4.days %>
+  end_date: <%= Date.current + 6.days %>

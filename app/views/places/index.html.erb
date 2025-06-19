@@ -28,6 +28,9 @@
                   <div class="text-gray-900 font-medium">
                     <%= place.name %>
                   </div>
+                  <div class="text-sm text-gray-500 mt-1">
+                    <%= place.start_date.strftime("%b %d, %Y") %> - <%= place.end_date.strftime("%b %d, %Y") %>
+                  </div>
                 </div>
               </div>
               <div class="flex items-center gap-2 ml-4 flex-shrink-0">
