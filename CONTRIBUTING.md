@@ -203,6 +203,23 @@ Before committing changes:
 
 All development commands use the `bin/` prefix for consistency and to ensure the correct versions of tools are used.
 
+### Deployment
+
+**Staging Environment**
+- Pull requests automatically trigger staging deployments 
+- Deployments require manual approval in GitHub Actions
+- Uses the `travelapp-staging` app on Fly.io
+- Configured via `fly.staging.toml`
+
+**Production Environment**
+- Pushes to the `main` branch automatically deploy to production
+- Uses the `travelapp-production` app on Fly.io  
+- Configured via `fly.toml`
+
+**Manual Staging Deployment**
+- Staging deployments can also be triggered manually via GitHub Actions workflow dispatch
+- Navigate to Actions → "Deploy PR to Staging" → "Run workflow"
+
 ### Database Schema
 
 The application uses seven main tables:
