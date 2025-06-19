@@ -28,4 +28,18 @@ class UserTest < ActiveSupport::TestCase
     trips = user.all_trips
     assert trips.is_a?(ActiveRecord::Relation)
   end
+
+  test "should create user without account" do
+    user = User.create!(name: "Child User")
+    assert user.valid?
+    assert_nil user.account
+    assert_equal "Child User", user.name
+  end
+
+  test "should display name when user has no account" do
+    user = User.create!(name: "Guest User", picture: "http://example.com/pic.jpg")
+    assert_equal "Guest User", user.name
+    assert_nil user.account
+    assert_equal "http://example.com/pic.jpg", user.picture
+  end
 end

@@ -147,6 +147,69 @@ class TripsControllerTest < ActionDispatch::IntegrationTest
     assert_nil membership.reload.starting_place
   end
 
+  test "should create member without account" do
+    assert_difference([ "User.count", "TripMembership.count" ], 1) do
+      post create_guest_member_trip_url(@trip), params: {
+        user: { name: "Child Member", picture: "http://example.com/child.jpg" }
+      }
+    end
+
+    assert_redirected_to members_trip_url(@trip)
+    new_user = User.last
+    assert_equal "Child Member", new_user.name
+    assert_equal "http://example.com/child.jpg", new_user.picture
+    assert_nil new_user.account
+    assert @trip.member?(new_user)
+  end
+
+  test "should not create member without account when missing name" do
+    assert_no_difference([ "User.count", "TripMembership.count" ]) do
+      post create_guest_member_trip_url(@trip), params: {
+        user: { name: "", picture: "http://example.com/pic.jpg" }
+      }
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test "should update guest member" do
+    guest_user = User.create!(name: "Guest")
+    @trip.add_member(guest_user)
+    membership = @trip.trip_memberships.find_by(user: guest_user)
+
+    patch update_guest_member_trip_url(@trip), params: {
+      membership_id: membership.id,
+      user: { name: "Updated Guest", picture: "http://example.com/new.jpg" }
+    }
+
+    assert_redirected_to members_trip_url(@trip)
+    guest_user.reload
+    assert_equal "Updated Guest", guest_user.name
+    assert_equal "http://example.com/new.jpg", guest_user.picture
+  end
+
+  test "should delete guest member" do
+    guest_user = User.create!(name: "Guest")
+    @trip.add_member(guest_user)
+    membership = @trip.trip_memberships.find_by(user: guest_user)
+
+    assert_difference([ "User.count", "TripMembership.count" ], -1) do
+      delete destroy_guest_member_trip_url(@trip), params: { membership_id: membership.id }
+    end
+
+    assert_redirected_to members_trip_url(@trip)
+  end
+
+  test "should not allow deleting member with account" do
+    membership = @trip.trip_memberships.find_by(user: @user)
+
+    assert_no_difference([ "User.count", "TripMembership.count" ]) do
+      delete destroy_guest_member_trip_url(@trip), params: { membership_id: membership.id }
+    end
+
+    assert_response :unprocessable_entity
+  end
+
   private
 
   def create_trip_with_owner(name, user)

@@ -66,4 +66,21 @@ class TripMembershipTest < ActiveSupport::TestCase
     membership = TripMembership.new(trip: @trip, user: @other_user, role: "member")
     assert membership.valid?
   end
+
+  test "should allow membership with user without account" do
+    user_without_account = User.create!(name: "Guest User")
+    membership = TripMembership.new(trip: @trip, user: user_without_account, role: "member")
+    assert membership.valid?
+    assert_nil user_without_account.account
+  end
+
+  test "should prevent duplicate users per trip even for users without accounts" do
+    user_without_account = User.create!(name: "Guest User")
+    TripMembership.create!(trip: @trip, user: user_without_account, role: "member")
+
+    # Try to create duplicate
+    duplicate = TripMembership.new(trip: @trip, user: user_without_account, role: "member")
+    assert_not duplicate.valid?
+    assert_includes duplicate.errors[:trip_id], "has already been taken"
+  end
 end

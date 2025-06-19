@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_action :authenticate_account!
-  before_action :set_trip, only: %i[ show edit update destroy members update_member_starting_place ]
+  before_action :set_trip, only: %i[ show edit update destroy members update_member_starting_place create_guest_member update_guest_member destroy_guest_member ]
 
   # GET /trips or /trips.json
   def index
@@ -89,6 +89,61 @@ class TripsController < ApplicationController
     redirect_to members_trip_path(@trip), notice: "Starting place updated successfully."
   end
 
+  # POST /trips/1/create_guest_member
+  def create_guest_member
+    authorize @trip, :update? # Only trip owners can add members
+
+    @user = User.new(user_params)
+
+    respond_to do |format|
+      if @user.save
+        @trip.add_member(@user, role: "member")
+        format.html { redirect_to members_trip_path(@trip), notice: "Member added successfully." }
+      else
+        # Set up instance variables needed by the members view
+        @memberships = @trip.trip_memberships.includes(:user, :starting_place)
+        @places = @trip.places.order(:name)
+        format.html { render :members, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH /trips/1/update_guest_member
+  def update_guest_member
+    authorize @trip, :update? # Only trip owners can update members
+    membership = @trip.trip_memberships.find(params[:membership_id])
+
+    # Only allow updating users without accounts
+    if membership.user.account.present?
+      redirect_to members_trip_path(@trip), alert: "Cannot update members with accounts."
+      return
+    end
+
+    if membership.user.update(user_params)
+      redirect_to members_trip_path(@trip), notice: "Member updated successfully."
+    else
+      redirect_to members_trip_path(@trip), alert: "Failed to update member: #{membership.user.errors.full_messages.join(', ')}"
+    end
+  end
+
+  # DELETE /trips/1/destroy_guest_member
+  def destroy_guest_member
+    authorize @trip, :update? # Only trip owners can remove members
+    membership = @trip.trip_memberships.find(params[:membership_id])
+
+    # Only allow deleting users without accounts
+    unless membership.user.account.nil?
+      render status: :unprocessable_entity, plain: "Cannot delete members with accounts"
+      return
+    end
+
+    user = membership.user
+    membership.destroy!
+    user.destroy! # Delete the user since they have no account
+
+    redirect_to members_trip_path(@trip), notice: "Member removed successfully."
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_trip
@@ -98,5 +153,9 @@ class TripsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def trip_params
       params.expect(trip: [ :name, :start_date, :end_date ])
+    end
+
+    def user_params
+      params.expect(user: [ :name, :picture ])
     end
 end
